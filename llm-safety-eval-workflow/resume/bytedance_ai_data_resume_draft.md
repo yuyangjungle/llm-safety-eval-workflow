@@ -18,6 +18,7 @@ AI 数据产品 / LLM 安全评测 / 数据生产链路 / 合成数据 / Agentic
 - 定义评测样本 schema，包含风险类型、场景、用户 prompt、期望行为、严重度、难度、是否拒答及 judge rubric 等字段，支撑样本生产、规则校验和后续人工抽检。
 - 搭建「种子样本 -> 模板化合成样本 -> Schema 校验 -> 质量指标统计 -> 评估报告」的离线数据生产 Workflow，生成 32 条 MVP 样本并输出质量验收报告。
 - 设计 schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率、难度分布等质量门禁，并通过静态 demo 展示样本浏览、风险筛选和质量评估结果。
+- 项目证据：GitHub `github.com/yuyangjungle/llm-safety-eval-workflow`；Demo `yuyangjungle.github.io/llm-safety-eval-workflow/`。
 
 ### 文本预处理技术对大语言模型性能影响的研究
 
@@ -37,4 +38,3 @@ AI 数据产品 / LLM 安全评测 / 数据生产链路 / 合成数据 / Agentic
 - 「AI 面试陪练官」与岗位相关，但容易显得偏求职工具；建议从主版本删除，给新项目腾位置。
 - 超级简历经历保留，但压缩成数据分析、产品链路、AI 求职辅助理解三条。
 - 中科院 Java 实习保留 2-3 条，突出接口联调、数据处理、系统稳定性即可。
-

@@ -20,6 +20,13 @@ Then visit:
 http://localhost:8000/llm-safety-eval-workflow/demo/
 ```
 
+Optional PDF resume generation requires Python dependencies:
+
+```powershell
+python -m pip install -r requirements.txt
+npm run resume
+```
+
 Main project README:
 
 ```text

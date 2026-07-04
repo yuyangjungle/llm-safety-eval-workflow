@@ -29,6 +29,7 @@
 公开仓库：
 
 - GitHub：<https://github.com/yuyangjungle/llm-safety-eval-workflow>
+- 在线 Demo：<https://yuyangjungle.github.io/llm-safety-eval-workflow/>
 
 当前本地可打开：
 
@@ -37,7 +38,7 @@
 - 质量报告：`docs/eval_report.md`
 - 模型评测报告：`docs/model_eval_report.md`
 
-部署到 Vercel 或 GitHub Pages 后，根路径会自动展示 demo。
+当前 GitHub Pages 根路径会自动跳转到 demo。部署到 Vercel 后，根路径同样会自动展示 demo。
 
 ## 项目结构
 
@@ -105,6 +106,7 @@ python -m http.server 8000
 如果从仓库根目录运行：
 
 ```powershell
+python -m pip install -r requirements.txt
 npm run generate
 npm run verify
 npm run resume

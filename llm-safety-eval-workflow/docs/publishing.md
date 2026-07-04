@@ -6,6 +6,7 @@
 
 - 本地 demo：`demo/index.html`
 - GitHub 仓库：<https://github.com/yuyangjungle/llm-safety-eval-workflow>
+- GitHub Pages Demo：<https://yuyangjungle.github.io/llm-safety-eval-workflow/>
 - Vercel 根目录入口：仓库根目录 `index.html` + `vercel.json`
 - 项目内 Vercel 入口：`llm-safety-eval-workflow/index.html` + `llm-safety-eval-workflow/vercel.json`
 - 简历 PDF：`resume/bytedance_ai_data_resume.pdf`
@@ -56,9 +57,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\publish_via_github
 
 ## GitHub Pages 路径
 
-当前仓库包含 `.github/workflows/pages.yml`。推送到 GitHub 后，在仓库 Settings -> Pages 中选择 GitHub Actions，或者直接触发 workflow，即可发布静态 demo。
+当前仓库包含 `.github/workflows/pages.yml`。GitHub Pages 已启用并通过 GitHub Actions 发布静态 demo：
 
-发布后根路径会显示 `index.html`，并跳转到：
+```text
+https://yuyangjungle.github.io/llm-safety-eval-workflow/
+```
+
+根路径会显示 `index.html`，并跳转到：
 
 ```text
 /llm-safety-eval-workflow/demo/
@@ -101,5 +106,5 @@ python scripts/build_resume_pdf.py
 ## 当前待完成
 
 1. 在 Vercel 中导入 GitHub 仓库 `yuyangjungle/llm-safety-eval-workflow`，或登录 Vercel CLI 后运行 `vercel deploy --prod`。
-2. 拿到线上 demo URL 后，更新 README 与简历 PDF 中的项目链接。
+2. 拿到 Vercel URL 后，更新 README 与简历 PDF 中的项目链接。
 3. 重新运行 `npm run verify` 与 `npm run resume`。

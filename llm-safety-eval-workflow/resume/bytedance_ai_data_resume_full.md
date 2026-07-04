@@ -47,7 +47,7 @@ Java 工程师实习生｜2024年07月 - 2024年08月
 - 设计 schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率、难度分布等质量门禁，并通过静态 demo 展示样本浏览、风险筛选和质量评估结果。
 - 补充候选模型输出样例与 rubric judge 流程，对 baseline 与 safety workflow 两组输出进行评测，沉淀 bad case 归因和「评测结果 -> 数据动作 -> 补样策略」的数据飞轮思路。
 
-项目证据：`llm-safety-eval-workflow/README.md`, `docs/eval_report.md`, `docs/model_eval_report.md`, `demo/index.html`
+项目证据：GitHub `github.com/yuyangjungle/llm-safety-eval-workflow`；Demo `yuyangjungle.github.io/llm-safety-eval-workflow/`；`docs/eval_report.md`, `docs/model_eval_report.md`
 
 ### 文本预处理技术对大语言模型性能影响的研究
 
