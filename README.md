@@ -1,35 +1,49 @@
-# LLM Safety Eval Workflow Workspace
+# LLM Safety Eval Workflow
 
-This repository contains a static demo and evidence-backed resume project for an LLM safety evaluation data workflow.
+面向 AI 数据与安全方向的可展示项目：用一个离线可复现的 workflow，展示从安全风险分类、评测样本生产、schema 校验、模型输出评测到 bad case 数据迭代的完整闭环。
 
-Current publish status:
+## 快速入口
 
-- GitHub repository is published: https://github.com/yuyangjungle/llm-safety-eval-workflow
-- Vercel production demo is live: https://llm-safety-eval-workflow.vercel.app
-- GitHub Pages fallback demo is live: https://yuyangjungle.github.io/llm-safety-eval-workflow/
-- Local `git push` may fail while the global git proxy points to an unavailable `127.0.0.1:7890` proxy.
+- Vercel Demo: https://llm-safety-eval-workflow.vercel.app
+- GitHub Repo: https://github.com/yuyangjungle/llm-safety-eval-workflow
+- GitHub Pages: https://yuyangjungle.github.io/llm-safety-eval-workflow/
+- 项目 README: [llm-safety-eval-workflow/README.md](llm-safety-eval-workflow/README.md)
+- 面试速记: [llm-safety-eval-workflow/docs/interview_brief.md](llm-safety-eval-workflow/docs/interview_brief.md)
+- Case Study: [llm-safety-eval-workflow/docs/case_study.md](llm-safety-eval-workflow/docs/case_study.md)
 
-Open the demo locally:
+## 当前产物
+
+- 32 条安全评测样本，覆盖 8 类风险。
+- 两组候选模型输出：`baseline_naive_v0` 与 `safety_workflow_v1`。
+- 可复现的 rubric judge、bad case 归因和补样建议。
+- 静态 dashboard demo，可用于 HR 预览和面试讲解。
+- 针对字节 AI 数据与安全中台 JD 的项目说明、简历证据映射和 PDF 简历草稿。
+
+## 本地运行
 
 ```powershell
-python -m http.server 8000
+npm run generate
+npm run verify
+npm run serve
 ```
 
-Then visit:
+访问：
 
 ```text
 http://localhost:8000/llm-safety-eval-workflow/demo/
 ```
 
-Optional PDF resume generation requires Python dependencies:
+生成简历 PDF：
 
 ```powershell
 python -m pip install -r requirements.txt
 npm run resume
 ```
 
-Main project README:
+## 发布说明
 
-```text
-llm-safety-eval-workflow/README.md
+当前 GitHub、Vercel 和 GitHub Pages 均已发布。若本机 `git push` 因代理 `127.0.0.1:7890` 失败，可使用仓库内的 GitHub API 发布脚本：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\publish_via_github_api.ps1 -Owner yuyangjungle -Repo llm-safety-eval-workflow -Branch main -Message "Update project"
 ```

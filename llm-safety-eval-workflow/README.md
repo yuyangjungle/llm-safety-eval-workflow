@@ -1,45 +1,62 @@
 # LLM Safety Eval Data Workflow
 
-面向字节「AI 产品实习生 - AI 数据与安全」JD 的离线 MVP：从风险分类体系、样本 schema、合成样本生成、规则校验、质量指标、评估报告到可展示 demo，模拟一条小型的大模型安全评测数据生产与质量验收 Workflow。
+面向 AI 数据与安全方向的离线 MVP：从风险分类、样本生产、schema 校验、模型输出评测到 bad case 迭代，模拟一条小型的大模型安全评测数据基建 workflow。
+
+[Vercel Demo](https://llm-safety-eval-workflow.vercel.app) · [GitHub Pages](https://yuyangjungle.github.io/llm-safety-eval-workflow/) · [Interview Brief](docs/interview_brief.md) · [Case Study](docs/case_study.md) · [Model Eval Report](docs/model_eval_report.md)
 
 ![Demo screenshot](results/demo-chrome-screenshot.png)
 
 ## 项目定位
 
-这个项目不是训练模型，也不是声称已经接入线上大模型服务。当前版本重点验证数据产品能力：
+这个项目不是训练模型，也不声称已经接入线上业务。它重点展示 AI 数据产品实习生岗位需要的能力：
 
-- 将抽象的 LLM 安全问题拆成可生产、可验收的数据分类体系。
-- 用结构化 schema 约束评测样本字段、难度、预期行为和 judge rubric。
-- 搭建「种子样本 -> 合成扩展 -> 规则校验 -> 质量指标 -> bad case 迭代」的离线流程。
-- 输出评测数据质量报告和可视化 demo，用于支持简历项目描述和面试讲解。
+- 把抽象的大模型安全风险拆成可生产、可验收的数据分类体系。
+- 设计结构化样本 schema、expected behavior 和 rubric judge。
+- 搭建 seed sample -> synthetic expansion -> quality gates -> model eval -> bad case flywheel 的离线流程。
+- 用可解释的指标和 dashboard，把数据质量、模型输出差异和迭代动作讲清楚。
+
+## 当前结果
+
+| 模块 | 结果 |
+| --- | --- |
+| 风险分类 | 8 类安全风险，覆盖隐私、注入、违法伤害、自伤、偏见等场景 |
+| 样本规模 | 32 条评测样本，包含 8 条 seed sample 和 24 条 synthetic sample |
+| 质量门禁 | schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率均为 100% |
+| 候选输出 | `baseline_naive_v0` 与 `safety_workflow_v1` 两组输出，共 64 条 |
+| 模型评测 | rubric judge 输出 pass rate、bad case、失败原因和补样建议 |
+| 展示产物 | Vercel demo、GitHub Pages demo、case study、model report、简历项目描述 |
+
+## Workflow
+
+```mermaid
+flowchart LR
+  A["Risk taxonomy"] --> B["Seed samples"]
+  B --> C["Synthetic expansion"]
+  C --> D["Schema and quality gates"]
+  D --> E["Candidate model outputs"]
+  E --> F["Rubric judge"]
+  F --> G["Bad case analysis"]
+  G --> H["Data action and next sampling plan"]
+```
 
 ## JD 对齐
 
 | JD 关键词 | 项目证据 |
 | --- | --- |
-| 数据策略制定 | `docs/data_taxonomy.md` 定义风险类型、样本策略、难度分层 |
-| 数据产线搭建 | `scripts/generate_samples.py` 生成合成样本并输出统一数据集 |
-| 质量与效果评估 | `scripts/evaluate_quality.py` 输出质量指标与评估报告 |
-| 模式创新 / 自动化 | `demo/` 展示 schema-first workflow、质量门禁和数据飞轮 |
-| 合成数据 | `data/synthetic_samples.json` 由模板和规则生成 |
-| Workflow / Agent | README 与 demo 中展示可扩展到 LLM-as-judge / human review 的编排路径 |
+| 数据策略制定 | [data_taxonomy.md](docs/data_taxonomy.md) 定义风险类型、样本策略和难度分层 |
+| 数据生产流程 | [generate_samples.py](scripts/generate_samples.py) 生成 synthetic samples 并输出统一数据集 |
+| 质量评估体系 | [evaluate_quality.py](scripts/evaluate_quality.py) 和 [eval_report.md](docs/eval_report.md) 输出质量门禁 |
+| 模型效果评测 | [judge_outputs.py](scripts/judge_outputs.py) 和 [model_eval_report.md](docs/model_eval_report.md) 输出模型对比 |
+| Bad case 迭代 | [data_flywheel.md](docs/data_flywheel.md) 和 demo 中的 judge trace 展示补样动作 |
+| 产品化表达 | [demo/](demo/) 将 workflow、指标、样本和报告变成可展示 dashboard |
 
-## 在线展示
+## 面试讲法
 
-公开仓库：
+最短版本：
 
-- GitHub：<https://github.com/yuyangjungle/llm-safety-eval-workflow>
-- Vercel Demo：<https://llm-safety-eval-workflow.vercel.app>
-- GitHub Pages Demo：<https://yuyangjungle.github.io/llm-safety-eval-workflow/>
+> 我做了一个面向大模型安全评测的数据 workflow MVP。它不是单纯做前端 demo，而是从风险分类、样本 schema、合成扩展、质量门禁、候选模型输出、rubric judge 到 bad case 补样建议形成闭环。项目里有 32 条样本、8 类风险、两组候选输出和可复现的评测报告，可以用来说明我对 AI 数据基建、质量验收和模型安全评测的理解。
 
-当前本地可打开：
-
-- Demo：`demo/index.html`
-- Case Study：`docs/case_study.md`
-- 质量报告：`docs/eval_report.md`
-- 模型评测报告：`docs/model_eval_report.md`
-
-当前 Vercel 与 GitHub Pages 根路径都会自动跳转到 demo。
+更完整的讲法见 [docs/interview_brief.md](docs/interview_brief.md)。
 
 ## 项目结构
 
@@ -48,101 +65,62 @@ llm-safety-eval-workflow/
   data/
     risk_taxonomy.json
     seed_samples.json
+    synthetic_samples.json
+    all_samples.json
+    model_outputs.json
+    judge_results.json
+    bad_cases.json
   demo/
     index.html
     styles.css
     app.js
+    data.js
   docs/
     case_study.md
+    data_flywheel.md
     data_taxonomy.md
-    schema.md
+    interview_brief.md
     jd_alignment.md
     llm_as_judge.md
-    data_flywheel.md
-  results/
-  resume/
-    bytedance_ai_data_resume_draft.md
-    evidence_map.md
+    model_eval_report.md
+    schema.md
   scripts/
     generate_samples.py
     evaluate_quality.py
     generate_model_outputs.py
+    generate_deepseek_outputs.py
     judge_outputs.py
+    verify_mvp.py
 ```
 
-运行脚本后会生成：
+## 本地运行
 
-```text
-data/synthetic_samples.json
-data/all_samples.json
-data/model_outputs.json
-data/judge_results.json
-data/bad_cases.json
-results/quality_report.json
-results/model_eval_report.json
-docs/eval_report.md
-docs/model_eval_report.md
-demo/data.js
-```
-
-## 快速运行
+从仓库根目录运行：
 
 ```powershell
-cd llm-safety-eval-workflow
-python scripts/generate_samples.py
-python scripts/evaluate_quality.py
-python scripts/generate_model_outputs.py
-python scripts/judge_outputs.py
-python scripts/verify_mvp.py
-```
-
-打开 `demo/index.html` 即可查看静态 demo。也可以在目录下启动本地服务器：
-
-```powershell
-python -m http.server 8000
-```
-
-然后访问 `http://localhost:8000/demo/`。
-
-如果从仓库根目录运行：
-
-```powershell
-python -m pip install -r requirements.txt
 npm run generate
 npm run verify
-npm run resume
 npm run serve
 ```
 
-然后访问 `http://localhost:8000/llm-safety-eval-workflow/demo/`。
+访问：
 
-## 当前 MVP 快照
+```text
+http://localhost:8000/llm-safety-eval-workflow/demo/
+```
 
-- 风险分类：8 类。
-- 样本规模：32 条，其中 8 条人工种子样本、24 条模板化合成样本。
-- 质量门禁：Schema 完整率、风险覆盖率、Prompt 去重率、Rubric 完整率均为 100%。
-- 模型评测：提供 `baseline_naive_v0` 与 `safety_workflow_v1` 两组候选输出样例、rubric judge、bad case 归因与数据飞轮建议。
-- 展示产物：`demo/index.html` 静态 dashboard、`docs/eval_report.md` 质量报告、`docs/model_eval_report.md` 模型评测报告、`resume/bytedance_ai_data_resume_full.md` 简历草稿。
-- 真实模型接入：支持通过 `DEEPSEEK_API_KEY` 生成 DeepSeek API 输出，详见 `docs/deepseek_integration.md`。
-
-## 当前 MVP 边界
-
-- 样本为人工种子 + 模板化合成数据，用于展示数据生产流程，不代表真实业务数据。
-- 质量评估为离线规则校验与覆盖率统计，不声称等价于真实线上模型评测。
-- 当前模型输出为离线候选输出样例，rubric judge 是可复现的规则 judge；真实 LLM-as-judge prompt 与人工抽检设计见 `docs/llm_as_judge.md`。
-- 后续可接入真实 LLM API，补充模型输出、LLM-as-judge、人工抽检与多轮数据飞轮。
-
-## DeepSeek API 接入
+可选 DeepSeek API 输出：
 
 ```powershell
 $env:DEEPSEEK_API_KEY="your_key_here"
 npm run deepseek:sample
 ```
 
-脚本只从环境变量读取 key，不会把 key 写入仓库。完整说明见 `docs/deepseek_integration.md`。
+脚本只从环境变量读取 key，不会把 key 写入仓库。详细说明见 [deepseek_integration.md](docs/deepseek_integration.md)。
 
-## 发布路径
+## MVP 边界
 
-- Vercel：仓库根目录的 `vercel.json` 会把 `/` 指向 demo。
-- GitHub Pages：`.github/workflows/pages.yml` 会在 push 到 `master` / `main` 后发布静态站点。
-- 当前 GitHub 仓库、Vercel Demo 与 GitHub Pages Demo 均已发布。详细发布步骤见 `docs/publishing.md`。
+- 样本是人工 seed + 模板化合成数据，用于展示数据生产流程，不代表真实业务数据。
+- 当前 judge 是可复现的规则化 rubric judge，不等同于真实线上 LLM-as-judge 或人工审核系统。
+- 当前 demo 是静态 dashboard，重点验证 workflow、数据结构和展示表达。
+- 后续可以继续补真实 LLM API 输出、多轮 judge、人审抽检、错误聚类和数据版本管理。
