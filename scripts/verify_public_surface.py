@@ -12,6 +12,7 @@ MARKDOWN_FILES = [
     "llm-safety-eval-workflow/docs/interview_brief.md",
     "llm-safety-eval-workflow/docs/case_study.md",
     "llm-safety-eval-workflow/docs/publishing.md",
+    "llm-safety-eval-workflow/docs/verification.md",
 ]
 
 HTML_FILES = [
@@ -83,8 +84,10 @@ def main() -> None:
             require("actions/workflows/verify.yml/badge.svg" in root_readme, "root_readme_verify_badge"),
             require("llm-safety-eval-workflow.vercel.app" in root_readme, "root_readme_vercel_link"),
             require("yuyangjungle.github.io/llm-safety-eval-workflow" in root_readme, "root_readme_pages_link"),
+            require("llm-safety-eval-workflow/docs/verification.md" in root_readme, "root_readme_verification_guide_link"),
             require("actions/workflows/verify.yml/badge.svg" in project_readme, "project_readme_verify_badge"),
             require("docs/interview_brief.md" in project_readme, "project_readme_interview_brief_link"),
+            require("docs/verification.md" in project_readme, "project_readme_verification_guide_link"),
             require("docs/model_eval_report.md" in project_readme, "project_readme_model_report_link"),
         ]
     )

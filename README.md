@@ -14,6 +14,7 @@
 - 项目 README: [llm-safety-eval-workflow/README.md](llm-safety-eval-workflow/README.md)
 - 面试速记: [llm-safety-eval-workflow/docs/interview_brief.md](llm-safety-eval-workflow/docs/interview_brief.md)
 - Case Study: [llm-safety-eval-workflow/docs/case_study.md](llm-safety-eval-workflow/docs/case_study.md)
+- Verification Guide: [llm-safety-eval-workflow/docs/verification.md](llm-safety-eval-workflow/docs/verification.md)
 
 ## 当前产物
 
@@ -28,6 +29,7 @@
 ```powershell
 npm run generate
 npm run verify
+npm run verify:public
 npm run serve
 ```
 
