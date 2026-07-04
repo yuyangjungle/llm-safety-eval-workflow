@@ -16,6 +16,7 @@
 - 面试速记: [llm-safety-eval-workflow/docs/interview_brief.md](llm-safety-eval-workflow/docs/interview_brief.md)
 - Case Study: [llm-safety-eval-workflow/docs/case_study.md](llm-safety-eval-workflow/docs/case_study.md)
 - 下一轮补样计划: [llm-safety-eval-workflow/docs/next_sampling_plan.md](llm-safety-eval-workflow/docs/next_sampling_plan.md)
+- 人审抽检协议: [llm-safety-eval-workflow/docs/human_review_protocol.md](llm-safety-eval-workflow/docs/human_review_protocol.md)
 - Verification Guide: [llm-safety-eval-workflow/docs/verification.md](llm-safety-eval-workflow/docs/verification.md)
 
 ## 当前产物

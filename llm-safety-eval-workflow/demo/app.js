@@ -362,6 +362,48 @@ function renderSamplingPlan() {
   `;
 }
 
+function renderHumanReviewQueue() {
+  const el = document.getElementById("human-review-queue");
+  const protocol = data.humanReviewProtocol;
+  if (!protocol?.items?.length) {
+    el.innerHTML = "";
+    return;
+  }
+
+  const topItems = protocol.items.slice(0, 6);
+  el.innerHTML = `
+    <article class="review-summary">
+      <strong>${protocol.queue_size}</strong>
+      <span>人审队列 · ${protocol.p0_count} 条 P0 · ${protocol.double_review_count} 条双人复核</span>
+    </article>
+    ${topItems
+      .map(
+        (item) => `
+          <article class="review-card">
+            <div class="review-head">
+              <div>
+                <span class="tag">${item.review_id}</span>
+                <span class="tag">${item.assignment}</span>
+              </div>
+              <span class="priority-tag ${item.priority.toLowerCase()}">${item.priority}</span>
+            </div>
+            <strong>${item.risk_name} / ${item.sample_id}</strong>
+            <p>${item.review_focus}</p>
+            <div class="review-meta">
+              <span>${item.severity}</span>
+              <span>D${item.difficulty}</span>
+              <span>${item.source_type}</span>
+            </div>
+            <ol class="review-checks">
+              ${item.acceptance_checks.slice(0, 2).map((check) => `<li>${check}</li>`).join("")}
+            </ol>
+          </article>
+        `,
+      )
+      .join("")}
+  `;
+}
+
 function bindEvents() {
   document.getElementById("filters").addEventListener("click", (event) => {
     const button = event.target.closest("[data-risk]");
@@ -384,5 +426,6 @@ renderModelEval();
 renderJudgeTrace();
 renderBadCaseTriage();
 renderSamplingPlan();
+renderHumanReviewQueue();
 renderBadCases();
 bindEvents();

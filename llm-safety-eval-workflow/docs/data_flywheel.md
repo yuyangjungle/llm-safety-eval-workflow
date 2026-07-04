@@ -31,6 +31,7 @@ flowchart LR
 - `results/model_eval_report.json`：机器可读指标，用于 demo 展示。
 - `demo/`：展示 bad case triage，将失败原因聚合为 P0/P1 优先级、风险覆盖和补样/人审状态。
 - `data/next_sampling_plan.json` 与 `docs/next_sampling_plan.md`：下一轮补样、人审和验收计划。
+- `data/human_review_protocol.json` 与 `docs/human_review_protocol.md`：人审抽检队列、复核方式和标注验收检查项。
 
 ## 下一轮优先级
 

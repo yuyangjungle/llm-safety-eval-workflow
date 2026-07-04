@@ -16,6 +16,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/docs/human_review_protocol.md</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/docs/interview_brief.md</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
