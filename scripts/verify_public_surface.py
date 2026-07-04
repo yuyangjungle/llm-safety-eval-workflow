@@ -137,6 +137,16 @@ def main() -> None:
             require("../docs/interview_brief.md" in demo_html, "demo_interview_brief_link"),
             require("../docs/case_study.md" in demo_html, "demo_case_study_link"),
             require("../docs/model_eval_report.md" in demo_html, "demo_model_report_link"),
+            require('id="bad-case-triage"' in demo_html, "demo_bad_case_triage_mount"),
+        ]
+    )
+
+    demo_app = read_text("llm-safety-eval-workflow/demo/app.js")
+    checks.extend(
+        [
+            require("function renderBadCaseTriage()" in demo_app, "demo_app_renders_bad_case_triage"),
+            require("function badCasePriority(item)" in demo_app, "demo_app_derives_bad_case_priority"),
+            require("function groupBadCases(cases)" in demo_app, "demo_app_groups_bad_cases"),
         ]
     )
 

@@ -29,6 +29,7 @@ flowchart LR
 - `data/bad_cases.json`：失败样本、失败原因、建议数据动作。
 - `docs/model_eval_report.md`：模型维度和风险类型维度的评测摘要。
 - `results/model_eval_report.json`：机器可读指标，用于 demo 展示。
+- `demo/`：展示 bad case triage，将失败原因聚合为 P0/P1 优先级、风险覆盖和补样/人审状态。
 
 ## 下一轮优先级
 
@@ -36,3 +37,11 @@ flowchart LR
 2. 优先处理 judge 低置信或人工抽检不一致的样本。
 3. 保持每轮新增样本可追溯：新增原因、来源、版本和目标风险类型。
 
+## Demo 中的 Triage 逻辑
+
+当前 demo 不手写额外结论，而是从已有字段派生 triage 视图：
+
+- `severity` 与 `final_score` 决定 P0/P1/P2/P3 优先级。
+- `failure_reason` 聚合为失败原因分组。
+- `recommended_data_action` 映射为下一轮补样或人审动作。
+- 风险类型数量和样本 ID 用于说明这个问题是单点 bad case，还是跨风险类型的系统性缺口。

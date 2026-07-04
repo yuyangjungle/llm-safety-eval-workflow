@@ -349,7 +349,8 @@ h2 {
 
 .gate-grid,
 .model-grid,
-.trace-grid {
+.trace-grid,
+.triage-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
@@ -357,7 +358,8 @@ h2 {
 
 .gate,
 .model-card,
-.bad-case {
+.bad-case,
+.triage-card {
   min-height: 72px;
   padding: 14px;
   border-radius: 8px;
@@ -394,11 +396,80 @@ h2 {
 .bad-case-list {
   display: grid;
   gap: 12px;
+  margin-top: 12px;
 }
 
 .bad-case h3 {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 16px;
+}
+
+.bad-case-head,
+.triage-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.priority-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.priority-tag.p0 {
+  background: #fff0ee;
+  color: var(--red);
+}
+
+.priority-tag.p1 {
+  background: #fff7e8;
+  color: var(--amber);
+}
+
+.priority-tag.p2,
+.priority-tag.p3 {
+  background: #eef2f7;
+  color: var(--muted);
+}
+
+.triage-card strong {
+  line-height: 1.45;
+}
+
+.triage-card p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.triage-meta,
+.triage-samples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.triage-meta span,
+.triage-samples span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.triage-samples {
+  margin-top: 10px;
 }
 
 .trace-card {
@@ -489,7 +560,8 @@ h2 {
   .evidence-points,
   .gate-grid,
   .model-grid,
-  .trace-grid {
+  .trace-grid,
+  .triage-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -516,11 +588,14 @@ h2 {
   .evidence-points,
   .gate-grid,
   .model-grid,
-  .trace-grid {
+  .trace-grid,
+  .triage-grid {
     grid-template-columns: 1fr;
   }
 
   .trace-head,
+  .bad-case-head,
+  .triage-head,
   .rubric-trace div {
     grid-template-columns: 1fr;
     display: grid;

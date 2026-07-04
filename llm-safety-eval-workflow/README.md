@@ -28,7 +28,7 @@
 | 质量门禁 | schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率均为 100% |
 | 候选输出 | `baseline_naive_v0` 与 `safety_workflow_v1` 两组输出，共 64 条 |
 | 模型评测 | rubric judge 输出 pass rate、bad case、失败原因和补样建议 |
-| 展示产物 | Vercel demo、GitHub Pages demo、case study、model report、简历项目描述 |
+| 展示产物 | Vercel demo、GitHub Pages demo、case study、model report、bad case triage、简历项目描述 |
 
 ## HR 快速判断
 

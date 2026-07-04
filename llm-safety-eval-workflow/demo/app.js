@@ -18,6 +18,77 @@ function pct(value) {
   return `${Math.round(value * 100)}%`;
 }
 
+const priorityRank = {
+  P0: 0,
+  P1: 1,
+  P2: 2,
+  P3: 3,
+};
+
+function badCasePriority(item) {
+  const sample = sampleById[item.sample_id];
+  const judge = judgeByKey[`${item.sample_id}:${item.model_id}`];
+  const severity = sample?.label?.severity || "medium";
+  const score = judge?.final_score ?? 0;
+
+  if (severity === "high" && score <= 0.3) return "P0";
+  if (severity === "high" || score <= 0.3) return "P1";
+  if (score <= 0.6) return "P2";
+  return "P3";
+}
+
+function badCaseStatus(item) {
+  if (item.failure_reason.includes("不可逆")) return "待人审抽检";
+  if (item.failure_reason.includes("证据不足")) return "待补证据约束";
+  return "待补样扩展";
+}
+
+function sortedBadCases() {
+  return [...(data.badCases || [])].sort((a, b) => {
+    const priorityDelta = priorityRank[badCasePriority(a)] - priorityRank[badCasePriority(b)];
+    if (priorityDelta !== 0) return priorityDelta;
+    return a.sample_id.localeCompare(b.sample_id);
+  });
+}
+
+function groupBadCases(cases) {
+  const groups = new Map();
+  cases.forEach((item) => {
+    const key = item.failure_reason;
+    const sample = sampleById[item.sample_id];
+    const taxonomy = taxonomyById[item.risk_type];
+    const priority = badCasePriority(item);
+    const status = badCaseStatus(item);
+    if (!groups.has(key)) {
+      groups.set(key, {
+        reason: key,
+        action: item.recommended_data_action,
+        count: 0,
+        priority,
+        statuses: new Set(),
+        riskTypes: new Set(),
+        samples: [],
+      });
+    }
+    const group = groups.get(key);
+    group.count += 1;
+    if (priorityRank[priority] < priorityRank[group.priority]) group.priority = priority;
+    group.statuses.add(status);
+    group.riskTypes.add(taxonomy?.name || item.risk_type);
+    group.samples.push({
+      id: item.sample_id,
+      severity: sample?.label?.severity || "medium",
+      difficulty: sample?.label?.difficulty || "-",
+    });
+  });
+
+  return [...groups.values()].sort((a, b) => {
+    const priorityDelta = priorityRank[a.priority] - priorityRank[b.priority];
+    if (priorityDelta !== 0) return priorityDelta;
+    return b.count - a.count;
+  });
+}
+
 function renderMetrics() {
   const metrics = data.report.metrics;
   const items = [
@@ -194,21 +265,63 @@ function renderJudgeTrace() {
 
 function renderBadCases() {
   const el = document.getElementById("bad-cases");
-  const cases = (data.badCases || []).slice(0, 4);
+  const cases = sortedBadCases().slice(0, 8);
   if (!cases.length) {
     el.innerHTML = `<article class="bad-case"><h3>暂无 bad case</h3><span>当前候选输出全部通过 rubric judge</span></article>`;
     return;
   }
   el.innerHTML = cases
-    .map(
-      (item) => `
+    .map((item) => {
+      const taxonomy = taxonomyById[item.risk_type];
+      const priority = badCasePriority(item);
+      const status = badCaseStatus(item);
+      return `
         <article class="bad-case">
-          <h3>${item.model_id} / ${item.sample_id}</h3>
+          <div class="bad-case-head">
+            <h3>${item.model_id} / ${item.sample_id}</h3>
+            <span class="priority-tag ${priority.toLowerCase()}">${priority}</span>
+          </div>
+          <div class="tag-row">
+            <span class="tag">${taxonomy?.name || item.risk_type}</span>
+            <span class="tag">${status}</span>
+          </div>
           <p>${item.failure_reason}</p>
           <span>${item.recommended_data_action}</span>
         </article>
-      `,
-    )
+      `;
+    })
+    .join("");
+}
+
+function renderBadCaseTriage() {
+  const el = document.getElementById("bad-case-triage");
+  const cases = sortedBadCases();
+  if (!cases.length) {
+    el.innerHTML = "";
+    return;
+  }
+  el.innerHTML = groupBadCases(cases)
+    .map((group) => {
+      const samples = group.samples
+        .slice(0, 3)
+        .map((sample) => `<span>${sample.id} · ${sample.severity} · D${sample.difficulty}</span>`)
+        .join("");
+      return `
+        <article class="triage-card">
+          <div class="triage-head">
+            <span class="priority-tag ${group.priority.toLowerCase()}">${group.priority}</span>
+            <strong>${group.reason}</strong>
+          </div>
+          <p>${group.action}</p>
+          <div class="triage-meta">
+            <span>${group.count} cases</span>
+            <span>${group.riskTypes.size} risk types</span>
+            <span>${[...group.statuses].join(" / ")}</span>
+          </div>
+          <div class="triage-samples">${samples}</div>
+        </article>
+      `;
+    })
     .join("");
 }
 
@@ -232,5 +345,6 @@ renderSamples();
 renderGates();
 renderModelEval();
 renderJudgeTrace();
+renderBadCaseTriage();
 renderBadCases();
 bindEvents();

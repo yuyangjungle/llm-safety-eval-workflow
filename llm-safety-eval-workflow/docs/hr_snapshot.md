@@ -14,7 +14,7 @@
 | AI 数据产品 | 将抽象安全问题拆成 taxonomy、schema、rubric 和 dashboard，而不是只做单点脚本 |
 | 数据质量验收 | 输出 schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率等质量门禁 |
 | 模型效果评测 | 对比 `baseline_naive_v0` 与 `safety_workflow_v1` 两组候选输出，沉淀 pass rate 和 judge trace |
-| 安全 bad case 迭代 | 将失败样本归因为数据缺口，并生成下一轮补样和人审抽检建议 |
+| 安全 bad case 迭代 | 将失败样本归因为数据缺口，并在 demo 中展示优先级、风险覆盖和人审/补样状态 |
 
 ## 可以放在简历里的版本
 
