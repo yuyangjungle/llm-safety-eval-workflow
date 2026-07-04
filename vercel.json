@@ -4,10 +4,11 @@
   "installCommand": null,
   "outputDirectory": ".",
   "cleanUrls": true,
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
-      "destination": "/llm-safety-eval-workflow/demo/index.html"
+      "destination": "/llm-safety-eval-workflow/demo/",
+      "permanent": false
     }
   ]
 }

@@ -4,11 +4,14 @@
   "installCommand": null,
   "outputDirectory": ".",
   "cleanUrls": true,
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
-      "destination": "/demo/index.html"
-    },
+      "destination": "/demo/",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
     {
       "source": "/case-study",
       "destination": "/docs/case_study.md"
