@@ -59,6 +59,7 @@ h1 {
   font-size: 42px;
   line-height: 1.15;
   letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
 h2 {
@@ -124,11 +125,59 @@ h2 {
 }
 
 .workflow-band,
-.report-band {
+.report-band,
+.evidence-band {
   margin: 24px 0;
   padding: 22px;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+}
+
+.evidence-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.evidence-grid a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+}
+
+.evidence-points {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.evidence-points article {
+  min-height: 94px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fbff;
+}
+
+.evidence-points strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.evidence-points span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .workflow-steps {
@@ -266,7 +315,8 @@ h2 {
 }
 
 .gate-grid,
-.model-grid {
+.model-grid,
+.trace-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
@@ -318,6 +368,76 @@ h2 {
   font-size: 16px;
 }
 
+.trace-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.trace-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.trace-head strong {
+  color: var(--teal);
+  white-space: nowrap;
+}
+
+.output-compare {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.output-compare div {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.output-compare h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.output-compare p,
+.data-action {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.rubric-trace {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.rubric-trace div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.rubric-trace strong {
+  color: var(--ink);
+  white-space: nowrap;
+}
+
 .bad-case p {
   margin-bottom: 8px;
   line-height: 1.6;
@@ -333,8 +453,10 @@ h2 {
 
   .metrics,
   .workflow-steps,
+  .evidence-points,
   .gate-grid,
-  .model-grid {
+  .model-grid,
+  .trace-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -348,14 +470,26 @@ h2 {
     padding: 18px 14px 32px;
   }
 
+  .hero {
+    padding: 32px 0 24px;
+  }
+
   h1 {
-    font-size: 32px;
+    font-size: 29px;
   }
 
   .metrics,
   .workflow-steps,
+  .evidence-points,
   .gate-grid,
-  .model-grid {
+  .model-grid,
+  .trace-grid {
     grid-template-columns: 1fr;
+  }
+
+  .trace-head,
+  .rubric-trace div {
+    grid-template-columns: 1fr;
+    display: grid;
   }
 }

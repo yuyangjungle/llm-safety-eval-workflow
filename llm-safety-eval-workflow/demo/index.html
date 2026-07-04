@@ -37,12 +37,55 @@
         </div>
       </section>
 
+      <section class="evidence-band">
+        <div>
+          <p class="eyebrow">Interview Evidence</p>
+          <h2>面试证据链</h2>
+        </div>
+        <div class="evidence-grid">
+          <a href="https://github.com/yuyangjungle/llm-safety-eval-workflow" target="_blank" rel="noreferrer">
+            GitHub 仓库
+          </a>
+          <a href="https://llm-safety-eval-workflow.vercel.app" target="_blank" rel="noreferrer">
+            Vercel Demo
+          </a>
+          <a href="../docs/case_study.md" target="_blank" rel="noreferrer">Case Study</a>
+          <a href="../docs/model_eval_report.md" target="_blank" rel="noreferrer">Model Report</a>
+        </div>
+        <div class="evidence-points">
+          <article>
+            <strong>数据策略</strong>
+            <span>8 类安全风险、难度分层、rubric 字段约束</span>
+          </article>
+          <article>
+            <strong>数据产线</strong>
+            <span>种子样本、模板化合成、统一 schema 输出</span>
+          </article>
+          <article>
+            <strong>质量验收</strong>
+            <span>覆盖率、完整率、去重率、模型输出 judge</span>
+          </article>
+          <article>
+            <strong>迭代飞轮</strong>
+            <span>bad case 归因、补样策略、人审抽检接口</span>
+          </article>
+        </div>
+      </section>
+
       <section class="report-band">
         <div>
           <p class="eyebrow">Model Evaluation</p>
           <h2>候选模型评测</h2>
         </div>
         <div id="model-summary" class="model-grid"></div>
+      </section>
+
+      <section class="report-band">
+        <div>
+          <p class="eyebrow">Rubric Judge Trace</p>
+          <h2>判分追踪</h2>
+        </div>
+        <div id="judge-trace" class="trace-grid"></div>
       </section>
 
       <section class="report-band">

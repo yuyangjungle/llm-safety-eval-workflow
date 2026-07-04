@@ -206,13 +206,15 @@ def write_markdown_report(report: dict, path: Path) -> None:
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def write_demo_data(taxonomy, samples, quality_report, model_report, bad_cases) -> None:
+def write_demo_data(taxonomy, samples, quality_report, model_report, bad_cases, outputs, judge_results) -> None:
     payload = {
         "taxonomy": taxonomy,
         "samples": samples,
         "report": quality_report,
         "modelEval": model_report,
         "badCases": bad_cases,
+        "modelOutputs": outputs,
+        "judgeResults": judge_results,
     }
     DEMO_DIR.mkdir(parents=True, exist_ok=True)
     js = "window.WORKFLOW_DATA = "
@@ -251,7 +253,7 @@ def main() -> None:
     dump_json(Path(args.report_json), model_report)
     write_markdown_report(model_report, Path(args.report_md))
     if not args.no_demo:
-        write_demo_data(taxonomy, samples, quality_report, model_report, bad_cases)
+        write_demo_data(taxonomy, samples, quality_report, model_report, bad_cases, outputs, judge_results)
 
     print(f"Judged {len(judge_results)} model outputs.")
     print(f"Bad cases: {len(bad_cases)}.")
@@ -260,4 +262,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -6,6 +6,13 @@ const state = {
 };
 
 const taxonomyById = Object.fromEntries(data.taxonomy.map((item) => [item.id, item]));
+const sampleById = Object.fromEntries(data.samples.map((item) => [item.id, item]));
+const outputByKey = Object.fromEntries(
+  (data.modelOutputs || []).map((item) => [`${item.sample_id}:${item.model_id}`, item]),
+);
+const judgeByKey = Object.fromEntries(
+  (data.judgeResults || []).map((item) => [`${item.sample_id}:${item.model_id}`, item]),
+);
 
 function pct(value) {
   return `${Math.round(value * 100)}%`;
@@ -123,6 +130,68 @@ function renderModelEval() {
     .join("");
 }
 
+function renderJudgeTrace() {
+  const el = document.getElementById("judge-trace");
+  const badCases = data.badCases || [];
+  const traceSeeds = badCases
+    .filter((item) => item.model_id === "baseline_naive_v0")
+    .slice(0, 3)
+    .map((item) => item.sample_id);
+
+  if (!traceSeeds.length || !data.judgeResults || !data.modelOutputs) {
+    el.innerHTML = `<article class="trace-card"><h3>暂无 judge trace</h3><p>运行 scripts/judge_outputs.py 后显示逐条判分链路。</p></article>`;
+    return;
+  }
+
+  el.innerHTML = traceSeeds
+    .map((sampleId) => {
+      const sample = sampleById[sampleId];
+      const taxonomy = taxonomyById[sample.risk_type];
+      const baseline = judgeByKey[`${sampleId}:baseline_naive_v0`];
+      const safety = judgeByKey[`${sampleId}:safety_workflow_v1`];
+      const baselineOutput = outputByKey[`${sampleId}:baseline_naive_v0`];
+      const safetyOutput = outputByKey[`${sampleId}:safety_workflow_v1`];
+      const action = baseline.recommended_data_action || "当前样本已通过，无需补样。";
+
+      return `
+        <article class="trace-card">
+          <div class="trace-head">
+            <div>
+              <span class="tag">${sample.id}</span>
+              <span class="tag">${taxonomy.name}</span>
+            </div>
+            <strong>${Math.round(baseline.final_score * 100)}% → ${Math.round(safety.final_score * 100)}%</strong>
+          </div>
+          <p class="prompt">${sample.user_prompt}</p>
+          <div class="output-compare">
+            <div>
+              <h3>baseline_naive_v0</h3>
+              <p>${baselineOutput.output}</p>
+            </div>
+            <div>
+              <h3>safety_workflow_v1</h3>
+              <p>${safetyOutput.output}</p>
+            </div>
+          </div>
+          <div class="rubric-trace">
+            ${baseline.rubric_scores
+              .map(
+                (item) => `
+                  <div>
+                    <span>${item.criterion}</span>
+                    <strong>${item.score ? "PASS" : "MISS"} · ${Math.round(item.weight * 100)}%</strong>
+                  </div>
+                `,
+              )
+              .join("")}
+          </div>
+          <p class="data-action">数据动作：${action}</p>
+        </article>
+      `;
+    })
+    .join("");
+}
+
 function renderBadCases() {
   const el = document.getElementById("bad-cases");
   const cases = (data.badCases || []).slice(0, 4);
@@ -162,5 +231,6 @@ renderFilters();
 renderSamples();
 renderGates();
 renderModelEval();
+renderJudgeTrace();
 renderBadCases();
 bindEvents();
