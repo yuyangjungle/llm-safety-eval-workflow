@@ -1,5 +1,9 @@
 # LLM Safety Eval Workflow
 
+[![Verify data workflow](https://github.com/yuyangjungle/llm-safety-eval-workflow/actions/workflows/verify.yml/badge.svg)](https://github.com/yuyangjungle/llm-safety-eval-workflow/actions/workflows/verify.yml)
+[![Vercel Demo](https://img.shields.io/badge/Vercel-live-000?logo=vercel)](https://llm-safety-eval-workflow.vercel.app)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-2ea44f?logo=github)](https://yuyangjungle.github.io/llm-safety-eval-workflow/)
+
 面向 AI 数据与安全方向的可展示项目：用一个离线可复现的 workflow，展示从安全风险分类、评测样本生产、schema 校验、模型输出评测到 bad case 数据迭代的完整闭环。
 
 ## 快速入口

@@ -1,0 +1,62 @@
+name: Verify data workflow
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - ".github/workflows/verify.yml"
+      - "package.json"
+      - "requirements.txt"
+      - "llm-safety-eval-workflow/**"
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - ".github/workflows/verify.yml"
+      - "package.json"
+      - "requirements.txt"
+      - "llm-safety-eval-workflow/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Generate workflow artifacts
+        run: npm run generate
+
+      - name: Verify MVP evidence
+        run: npm run verify
+
+      - name: Upload generated reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workflow-reports
+          path: |
+            llm-safety-eval-workflow/docs/eval_report.md
+            llm-safety-eval-workflow/docs/model_eval_report.md
+            llm-safety-eval-workflow/results/quality_report.json
+            llm-safety-eval-workflow/results/model_eval_report.json
