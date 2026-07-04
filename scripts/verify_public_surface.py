@@ -21,6 +21,11 @@ HTML_FILES = [
     "llm-safety-eval-workflow/demo/index.html",
 ]
 
+STATIC_SITE_FILES = [
+    "robots.txt",
+    "sitemap.xml",
+]
+
 EXTERNAL_PREFIXES = (
     "http://",
     "https://",
@@ -103,6 +108,21 @@ def main() -> None:
                 require(meta_content(html, "name=twitter:card") == "summary_large_image", f"html_twitter_card:{file}"),
             ]
         )
+
+    for file in STATIC_SITE_FILES:
+        checks.append(require((ROOT / file).exists(), f"static_site_file_exists:{file}"))
+
+    robots = read_text("robots.txt")
+    sitemap = read_text("sitemap.xml")
+    checks.extend(
+        [
+            require("Sitemap: https://llm-safety-eval-workflow.vercel.app/sitemap.xml" in robots, "robots_sitemap_url"),
+            require("<loc>https://llm-safety-eval-workflow.vercel.app/</loc>" in sitemap, "sitemap_root_url"),
+            require("<loc>https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/demo/</loc>" in sitemap, "sitemap_demo_url"),
+            require("docs/interview_brief.md" in sitemap, "sitemap_interview_brief_url"),
+            require("docs/verification.md" in sitemap, "sitemap_verification_url"),
+        ]
+    )
 
     demo_html = read_text("llm-safety-eval-workflow/demo/index.html")
     checks.extend(

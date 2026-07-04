@@ -20,6 +20,8 @@ npm run verify:public
 | `npm run verify` | 验证 8 类风险、32 条样本、质量门禁、模型评测、简历证据等 MVP 核心指标 |
 | `npm run verify:public` | 验证 README 链接、badge、demo meta、OG/Twitter card、证据链链接、Pages/Vercel 配置和 CI 关键步骤 |
 
+`verify:public` 也会检查根目录的 `robots.txt` 和 `sitemap.xml`，确保公开站点具备基础发现入口，并且 sitemap 指向 Vercel canonical URL。
+
 ## GitHub Actions
 
 公开仓库使用两条 workflow：
