@@ -12,6 +12,7 @@
 - GitHub Repo: https://github.com/yuyangjungle/llm-safety-eval-workflow
 - GitHub Pages: https://yuyangjungle.github.io/llm-safety-eval-workflow/
 - 项目 README: [llm-safety-eval-workflow/README.md](llm-safety-eval-workflow/README.md)
+- HR 快速项目卡: [llm-safety-eval-workflow/docs/hr_snapshot.md](llm-safety-eval-workflow/docs/hr_snapshot.md)
 - 面试速记: [llm-safety-eval-workflow/docs/interview_brief.md](llm-safety-eval-workflow/docs/interview_brief.md)
 - Case Study: [llm-safety-eval-workflow/docs/case_study.md](llm-safety-eval-workflow/docs/case_study.md)
 - Verification Guide: [llm-safety-eval-workflow/docs/verification.md](llm-safety-eval-workflow/docs/verification.md)

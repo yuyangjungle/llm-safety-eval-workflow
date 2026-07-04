@@ -106,6 +106,39 @@ h2 {
   margin: 24px 0;
 }
 
+.role-fit-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.role-fit-strip strong {
+  color: var(--ink);
+}
+
+.role-fit-strip span,
+.role-fit-strip a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  text-decoration: none;
+}
+
+.role-fit-strip a {
+  color: var(--blue);
+  font-weight: 700;
+}
+
 .metric {
   min-height: 104px;
   padding: 18px;

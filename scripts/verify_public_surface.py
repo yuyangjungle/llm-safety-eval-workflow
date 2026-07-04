@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MARKDOWN_FILES = [
     "README.md",
     "llm-safety-eval-workflow/README.md",
+    "llm-safety-eval-workflow/docs/hr_snapshot.md",
     "llm-safety-eval-workflow/docs/interview_brief.md",
     "llm-safety-eval-workflow/docs/case_study.md",
     "llm-safety-eval-workflow/docs/publishing.md",
@@ -90,7 +91,9 @@ def main() -> None:
             require("llm-safety-eval-workflow.vercel.app" in root_readme, "root_readme_vercel_link"),
             require("yuyangjungle.github.io/llm-safety-eval-workflow" in root_readme, "root_readme_pages_link"),
             require("llm-safety-eval-workflow/docs/verification.md" in root_readme, "root_readme_verification_guide_link"),
+            require("llm-safety-eval-workflow/docs/hr_snapshot.md" in root_readme, "root_readme_hr_snapshot_link"),
             require("actions/workflows/verify.yml/badge.svg" in project_readme, "project_readme_verify_badge"),
+            require("docs/hr_snapshot.md" in project_readme, "project_readme_hr_snapshot_link"),
             require("docs/interview_brief.md" in project_readme, "project_readme_interview_brief_link"),
             require("docs/verification.md" in project_readme, "project_readme_verification_guide_link"),
             require("docs/model_eval_report.md" in project_readme, "project_readme_model_report_link"),
@@ -119,6 +122,7 @@ def main() -> None:
             require("Sitemap: https://llm-safety-eval-workflow.vercel.app/sitemap.xml" in robots, "robots_sitemap_url"),
             require("<loc>https://llm-safety-eval-workflow.vercel.app/</loc>" in sitemap, "sitemap_root_url"),
             require("<loc>https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/demo/</loc>" in sitemap, "sitemap_demo_url"),
+            require("docs/hr_snapshot.md" in sitemap, "sitemap_hr_snapshot_url"),
             require("docs/interview_brief.md" in sitemap, "sitemap_interview_brief_url"),
             require("docs/verification.md" in sitemap, "sitemap_verification_url"),
         ]
@@ -129,6 +133,7 @@ def main() -> None:
         [
             require("https://github.com/yuyangjungle/llm-safety-eval-workflow" in demo_html, "demo_github_link"),
             require("https://llm-safety-eval-workflow.vercel.app" in demo_html, "demo_vercel_link"),
+            require("../docs/hr_snapshot.md" in demo_html, "demo_hr_snapshot_link"),
             require("../docs/interview_brief.md" in demo_html, "demo_interview_brief_link"),
             require("../docs/case_study.md" in demo_html, "demo_case_study_link"),
             require("../docs/model_eval_report.md" in demo_html, "demo_model_report_link"),

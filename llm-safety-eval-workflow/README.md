@@ -6,7 +6,7 @@
 
 面向 AI 数据与安全方向的离线 MVP：从风险分类、样本生产、schema 校验、模型输出评测到 bad case 迭代，模拟一条小型的大模型安全评测数据基建 workflow。
 
-[Vercel Demo](https://llm-safety-eval-workflow.vercel.app) · [GitHub Pages](https://yuyangjungle.github.io/llm-safety-eval-workflow/) · [Interview Brief](docs/interview_brief.md) · [Case Study](docs/case_study.md) · [Verification Guide](docs/verification.md) · [Model Eval Report](docs/model_eval_report.md)
+[Vercel Demo](https://llm-safety-eval-workflow.vercel.app) · [GitHub Pages](https://yuyangjungle.github.io/llm-safety-eval-workflow/) · [HR Snapshot](docs/hr_snapshot.md) · [Interview Brief](docs/interview_brief.md) · [Case Study](docs/case_study.md) · [Verification Guide](docs/verification.md) · [Model Eval Report](docs/model_eval_report.md)
 
 ![Demo screenshot](results/demo-chrome-screenshot.png)
 
@@ -29,6 +29,10 @@
 | 候选输出 | `baseline_naive_v0` 与 `safety_workflow_v1` 两组输出，共 64 条 |
 | 模型评测 | rubric judge 输出 pass rate、bad case、失败原因和补样建议 |
 | 展示产物 | Vercel demo、GitHub Pages demo、case study、model report、简历项目描述 |
+
+## HR 快速判断
+
+如果只看 30 秒，建议先看 [HR Snapshot](docs/hr_snapshot.md)：里面把项目一句话、JD 匹配点、简历写法和项目边界放在一起，避免把这个项目误读成普通前端 demo。
 
 ## Workflow
 
