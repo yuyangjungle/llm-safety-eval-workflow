@@ -1,0 +1,14 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/demo/index.html"
+    },
+    {
+      "source": "/case-study",
+      "destination": "/docs/case_study.md"
+    }
+  ]
+}
+

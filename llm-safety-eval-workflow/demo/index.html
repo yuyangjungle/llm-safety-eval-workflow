@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LLM Safety Eval Data Workflow</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">AI Data & Safety Workflow MVP</p>
+          <h1>LLM 安全评测数据生产与质量验收</h1>
+          <p class="hero-copy">
+            从风险分类、合成样本、Schema 校验到质量报告的小型数据飞轮，用于验证大模型安全评测数据基建的产品方案。
+          </p>
+        </div>
+        <div class="hero-meta">
+          <span>Offline MVP</span>
+          <span>Schema-first</span>
+          <span>Quality Gates</span>
+        </div>
+      </section>
+
+      <section class="metrics" id="metrics"></section>
+
+      <section class="workflow-band">
+        <h2>Workflow</h2>
+        <div class="workflow-steps">
+          <div>风险分类</div>
+          <div>种子样本</div>
+          <div>合成扩展</div>
+          <div>规则校验</div>
+          <div>质量报告</div>
+          <div>数据迭代</div>
+        </div>
+      </section>
+
+      <section class="report-band">
+        <div>
+          <p class="eyebrow">Model Evaluation</p>
+          <h2>候选模型评测</h2>
+        </div>
+        <div id="model-summary" class="model-grid"></div>
+      </section>
+
+      <section class="report-band">
+        <div>
+          <p class="eyebrow">Quality Gates</p>
+          <h2>质量门禁</h2>
+        </div>
+        <div id="quality-gates" class="gate-grid"></div>
+      </section>
+
+      <section class="layout">
+        <aside class="filter-panel">
+          <h2>风险类型</h2>
+          <div id="filters" class="filter-list"></div>
+        </aside>
+
+        <section class="sample-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Sample Explorer</p>
+              <h2>评测样本</h2>
+            </div>
+            <label class="search-box">
+              <span>搜索</span>
+              <input id="search" type="search" placeholder="输入场景、prompt、风险类型" />
+            </label>
+          </div>
+          <div id="sample-list" class="sample-list"></div>
+        </section>
+      </section>
+
+      <section class="report-band">
+        <div>
+          <p class="eyebrow">Bad Case Flywheel</p>
+          <h2>失败样本与数据动作</h2>
+        </div>
+        <div id="bad-cases" class="bad-case-list"></div>
+      </section>
+    </main>
+
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

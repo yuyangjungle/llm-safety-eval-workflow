@@ -1,0 +1,13 @@
+{
+  "name": "llm-safety-eval-workflow",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "generate": "python llm-safety-eval-workflow/scripts/generate_samples.py && python llm-safety-eval-workflow/scripts/evaluate_quality.py && python llm-safety-eval-workflow/scripts/generate_model_outputs.py && python llm-safety-eval-workflow/scripts/judge_outputs.py",
+    "deepseek:sample": "python llm-safety-eval-workflow/scripts/generate_deepseek_outputs.py --limit 3 && python llm-safety-eval-workflow/scripts/judge_outputs.py --outputs llm-safety-eval-workflow/data/deepseek_outputs.json --judge-results llm-safety-eval-workflow/data/deepseek_judge_results.json --bad-cases llm-safety-eval-workflow/data/deepseek_bad_cases.json --report-json llm-safety-eval-workflow/results/deepseek_model_eval_report.json --report-md llm-safety-eval-workflow/docs/deepseek_model_eval_report.md --no-demo",
+    "deepseek:full": "python llm-safety-eval-workflow/scripts/generate_deepseek_outputs.py && python llm-safety-eval-workflow/scripts/judge_outputs.py --outputs llm-safety-eval-workflow/data/deepseek_outputs.json --judge-results llm-safety-eval-workflow/data/deepseek_judge_results.json --bad-cases llm-safety-eval-workflow/data/deepseek_bad_cases.json --report-json llm-safety-eval-workflow/results/deepseek_model_eval_report.json --report-md llm-safety-eval-workflow/docs/deepseek_model_eval_report.md --no-demo",
+    "verify": "python llm-safety-eval-workflow/scripts/verify_mvp.py",
+    "resume": "python llm-safety-eval-workflow/scripts/build_resume_pdf.py",
+    "serve": "python -m http.server 8000"
+  }
+}
