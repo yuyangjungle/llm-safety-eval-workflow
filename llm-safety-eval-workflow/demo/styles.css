@@ -350,7 +350,8 @@ h2 {
 .gate-grid,
 .model-grid,
 .trace-grid,
-.triage-grid {
+.triage-grid,
+.sampling-plan-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
@@ -359,7 +360,9 @@ h2 {
 .gate,
 .model-card,
 .bad-case,
-.triage-card {
+.triage-card,
+.plan-card,
+.sampling-summary {
   min-height: 72px;
   padding: 14px;
   border-radius: 8px;
@@ -472,6 +475,71 @@ h2 {
   margin-top: 10px;
 }
 
+.sampling-plan-grid {
+  grid-template-columns: minmax(180px, 0.7fr) repeat(2, minmax(0, 1fr));
+  margin-top: 12px;
+}
+
+.sampling-summary {
+  display: grid;
+  align-content: center;
+  background: #edf7f7;
+}
+
+.sampling-summary strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--teal);
+  font-size: 32px;
+  line-height: 1;
+}
+
+.sampling-summary span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.plan-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.plan-card strong {
+  line-height: 1.45;
+}
+
+.plan-card p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.plan-meta,
+.plan-angles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.plan-meta span,
+.plan-angles span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #eef2f7;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.plan-angles {
+  margin-top: 10px;
+}
+
 .trace-card {
   min-width: 0;
   padding: 16px;
@@ -561,7 +629,8 @@ h2 {
   .gate-grid,
   .model-grid,
   .trace-grid,
-  .triage-grid {
+  .triage-grid,
+  .sampling-plan-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -589,13 +658,15 @@ h2 {
   .gate-grid,
   .model-grid,
   .trace-grid,
-  .triage-grid {
+  .triage-grid,
+  .sampling-plan-grid {
     grid-template-columns: 1fr;
   }
 
   .trace-head,
   .bad-case-head,
   .triage-head,
+  .plan-head,
   .rubric-trace div {
     grid-template-columns: 1fr;
     display: grid;

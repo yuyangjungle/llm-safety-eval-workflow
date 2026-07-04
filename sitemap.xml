@@ -31,6 +31,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/docs/next_sampling_plan.md</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/docs/verification.md</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

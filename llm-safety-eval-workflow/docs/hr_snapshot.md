@@ -26,6 +26,7 @@ LLM 安全评测数据 workflow MVP：围绕 8 类安全风险设计评测样本
 - GitHub repo: https://github.com/yuyangjungle/llm-safety-eval-workflow
 - Interview brief: [interview_brief.md](interview_brief.md)
 - Model report: [model_eval_report.md](model_eval_report.md)
+- Next sampling plan: [next_sampling_plan.md](next_sampling_plan.md)
 - Case study: [case_study.md](case_study.md)
 
 ## 项目边界

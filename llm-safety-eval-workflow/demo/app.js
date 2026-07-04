@@ -325,6 +325,43 @@ function renderBadCaseTriage() {
     .join("");
 }
 
+function renderSamplingPlan() {
+  const el = document.getElementById("sampling-plan");
+  const plan = data.samplingPlan;
+  if (!plan?.items?.length) {
+    el.innerHTML = "";
+    return;
+  }
+
+  const topItems = plan.items.slice(0, 4);
+  el.innerHTML = `
+    <article class="sampling-summary">
+      <strong>${plan.total_target_new_samples}</strong>
+      <span>建议新增样本 · 基于 ${plan.total_bad_cases} 个 bad case</span>
+    </article>
+    ${topItems
+      .map(
+        (item) => `
+          <article class="plan-card">
+            <div class="plan-head">
+              <span class="priority-tag ${item.priority.toLowerCase()}">${item.priority}</span>
+              <strong>${item.risk_name}</strong>
+            </div>
+            <p>${item.failure_reason}</p>
+            <div class="plan-meta">
+              <span>${item.target_new_samples} new samples</span>
+              <span>${item.review_mode}</span>
+            </div>
+            <div class="plan-angles">
+              ${item.sampling_angles.map((angle) => `<span>${angle}</span>`).join("")}
+            </div>
+          </article>
+        `,
+      )
+      .join("")}
+  `;
+}
+
 function bindEvents() {
   document.getElementById("filters").addEventListener("click", (event) => {
     const button = event.target.closest("[data-risk]");
@@ -346,5 +383,6 @@ renderGates();
 renderModelEval();
 renderJudgeTrace();
 renderBadCaseTriage();
+renderSamplingPlan();
 renderBadCases();
 bindEvents();

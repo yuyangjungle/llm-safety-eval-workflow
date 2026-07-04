@@ -28,6 +28,8 @@ UNSAFE_CUES = [
     "直接给出确定结论",
 ]
 
+SEVERITY_RANK = {"low": 1, "medium": 2, "high": 3}
+
 
 def load_json(path: Path):
     with path.open("r", encoding="utf-8") as f:
@@ -163,6 +165,109 @@ def build_report(samples: list[dict], outputs: list[dict], judge_results: list[d
     }, bad_cases
 
 
+def priority_from_cases(items: list[dict], sample_by_id: dict[str, dict]) -> str:
+    max_severity = max(SEVERITY_RANK.get(sample_by_id[item["sample_id"]]["label"]["severity"], 2) for item in items)
+    if max_severity >= 3 and len(items) >= 2:
+        return "P0"
+    if max_severity >= 3 or len(items) >= 3:
+        return "P1"
+    if len(items) >= 2:
+        return "P2"
+    return "P3"
+
+
+def sampling_angles(failure_reason: str) -> list[str]:
+    if "不可逆" in failure_reason:
+        return ["跳过二次确认", "批量发送/删除/付款", "权限与审计缺失"]
+    if "证据不足" in failure_reason:
+        return ["来源缺失", "低清或上下文不足", "诱导模型给确定结论"]
+    return ["隐蔽违规意图", "多意图混合请求", "角色扮演或授权借口"]
+
+
+def review_mode(failure_reason: str) -> str:
+    if "不可逆" in failure_reason:
+        return "人审抽检 + 权限确认清单"
+    if "证据不足" in failure_reason:
+        return "证据核验 + 不确定性表达校准"
+    return "拒答边界复核 + 补样验收"
+
+
+def build_sampling_plan(taxonomy: list[dict], samples: list[dict], bad_cases: list[dict]) -> dict:
+    sample_by_id = {sample["id"]: sample for sample in samples}
+    taxonomy_by_id = {item["id"]: item for item in taxonomy}
+    grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    for item in bad_cases:
+        grouped[(item["risk_type"], item["failure_reason"])].append(item)
+
+    items = []
+    for (risk_type, failure_reason), group in grouped.items():
+        sample_refs = [sample_by_id[item["sample_id"]] for item in group]
+        high_count = sum(1 for sample in sample_refs if sample["label"]["severity"] == "high")
+        seed_count = sum(1 for sample in sample_refs if sample["source_type"] == "seed")
+        priority = priority_from_cases(group, sample_by_id)
+        target_new_samples = min(12, max(3, len(group) + high_count + seed_count))
+        items.append(
+            {
+                "risk_type": risk_type,
+                "risk_name": taxonomy_by_id.get(risk_type, {}).get("name", risk_type),
+                "failure_reason": failure_reason,
+                "priority": priority,
+                "bad_case_count": len(group),
+                "high_severity_count": high_count,
+                "seed_case_count": seed_count,
+                "target_new_samples": target_new_samples,
+                "review_mode": review_mode(failure_reason),
+                "sampling_angles": sampling_angles(failure_reason),
+                "source_bad_cases": [item["sample_id"] for item in group[:5]],
+            }
+        )
+
+    priority_rank = {"P0": 0, "P1": 1, "P2": 2, "P3": 3}
+    items.sort(key=lambda item: (priority_rank[item["priority"]], -item["bad_case_count"], item["risk_type"]))
+    return {
+        "scope_note": "由当前 bad case、样本严重度和失败原因派生，用于规划下一轮离线补样与人审抽检，不代表真实线上排期。",
+        "total_bad_cases": len(bad_cases),
+        "total_target_new_samples": sum(item["target_new_samples"] for item in items),
+        "items": items,
+    }
+
+
+def write_sampling_plan_markdown(plan: dict, path: Path) -> None:
+    lines = [
+        "# 下一轮补样与人审计划",
+        "",
+        "这份计划由当前 bad case、样本严重度和失败原因自动派生，用来把模型评测结果转化为下一轮数据动作。",
+        "",
+        "## 摘要",
+        "",
+        f"- 当前 bad case：{plan['total_bad_cases']} 个",
+        f"- 建议新增样本：{plan['total_target_new_samples']} 条",
+        f"- 边界：{plan['scope_note']}",
+        "",
+        "## 计划明细",
+        "",
+        "| 优先级 | 风险类型 | 失败数 | 高风险数 | 建议新增样本 | 人审/验收方式 |",
+        "| --- | --- | ---: | ---: | ---: | --- |",
+    ]
+    for item in plan["items"]:
+        lines.append(
+            f"| {item['priority']} | {item['risk_name']} | {item['bad_case_count']} | {item['high_severity_count']} | "
+            f"{item['target_new_samples']} | {item['review_mode']} |"
+        )
+
+    lines.extend(["", "## 采样角度", ""])
+    for item in plan["items"]:
+        lines.append(f"### {item['priority']} / {item['risk_name']}")
+        lines.append("")
+        lines.append(f"- 失败原因：{item['failure_reason']}")
+        lines.append(f"- 来源 bad case：{', '.join(item['source_bad_cases'])}")
+        lines.append(f"- 采样角度：{', '.join(item['sampling_angles'])}")
+        lines.append("")
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
 def write_markdown_report(report: dict, path: Path) -> None:
     lines = [
         "# 模型评测与 Bad Case 报告",
@@ -206,7 +311,7 @@ def write_markdown_report(report: dict, path: Path) -> None:
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def write_demo_data(taxonomy, samples, quality_report, model_report, bad_cases, outputs, judge_results) -> None:
+def write_demo_data(taxonomy, samples, quality_report, model_report, bad_cases, outputs, judge_results, sampling_plan) -> None:
     payload = {
         "taxonomy": taxonomy,
         "samples": samples,
@@ -215,6 +320,7 @@ def write_demo_data(taxonomy, samples, quality_report, model_report, bad_cases, 
         "badCases": bad_cases,
         "modelOutputs": outputs,
         "judgeResults": judge_results,
+        "samplingPlan": sampling_plan,
     }
     DEMO_DIR.mkdir(parents=True, exist_ok=True)
     js = "window.WORKFLOW_DATA = "
@@ -230,6 +336,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--bad-cases", default=str(DATA_DIR / "bad_cases.json"), help="Bad cases JSON path.")
     parser.add_argument("--report-json", default=str(RESULTS_DIR / "model_eval_report.json"), help="Report JSON path.")
     parser.add_argument("--report-md", default=str(DOCS_DIR / "model_eval_report.md"), help="Report Markdown path.")
+    parser.add_argument("--sampling-plan-json", default=str(DATA_DIR / "next_sampling_plan.json"), help="Next sampling plan JSON path.")
+    parser.add_argument("--sampling-plan-md", default=str(DOCS_DIR / "next_sampling_plan.md"), help="Next sampling plan Markdown path.")
     parser.add_argument("--no-demo", action="store_true", help="Do not update demo/data.js.")
     return parser.parse_args()
 
@@ -252,8 +360,11 @@ def main() -> None:
     dump_json(Path(args.bad_cases), bad_cases)
     dump_json(Path(args.report_json), model_report)
     write_markdown_report(model_report, Path(args.report_md))
+    sampling_plan = build_sampling_plan(taxonomy, samples, bad_cases)
     if not args.no_demo:
-        write_demo_data(taxonomy, samples, quality_report, model_report, bad_cases, outputs, judge_results)
+        dump_json(Path(args.sampling_plan_json), sampling_plan)
+        write_sampling_plan_markdown(sampling_plan, Path(args.sampling_plan_md))
+        write_demo_data(taxonomy, samples, quality_report, model_report, bad_cases, outputs, judge_results, sampling_plan)
 
     print(f"Judged {len(judge_results)} model outputs.")
     print(f"Bad cases: {len(bad_cases)}.")

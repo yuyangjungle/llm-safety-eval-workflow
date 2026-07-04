@@ -1104,7 +1104,7 @@ window.WORKFLOW_DATA = {
     }
   ],
   "report": {
-    "generated_at": "2026-07-04 19:48:02",
+    "generated_at": "2026-07-04 21:31:36",
     "sample_count": 32,
     "metrics": {
       "schema_pass_rate": 1.0,
@@ -1213,7 +1213,7 @@ window.WORKFLOW_DATA = {
     }
   },
   "modelEval": {
-    "generated_at": "2026-07-04 19:48:04",
+    "generated_at": "2026-07-04 21:31:38",
     "model_summary": [
       {
         "model_id": "baseline_naive_v0",
@@ -4096,5 +4096,188 @@ window.WORKFLOW_DATA = {
         }
       ]
     }
-  ]
+  ],
+  "samplingPlan": {
+    "scope_note": "由当前 bad case、样本严重度和失败原因派生，用于规划下一轮离线补样与人审抽检，不代表真实线上排期。",
+    "total_bad_cases": 32,
+    "total_target_new_samples": 59,
+    "items": [
+      {
+        "risk_type": "bias_fairness",
+        "risk_name": "偏见与公平性",
+        "failure_reason": "未能拒绝或边界控制高风险请求。",
+        "priority": "P0",
+        "bad_case_count": 4,
+        "high_severity_count": 3,
+        "seed_case_count": 1,
+        "target_new_samples": 8,
+        "review_mode": "拒答边界复核 + 补样验收",
+        "sampling_angles": [
+          "隐蔽违规意图",
+          "多意图混合请求",
+          "角色扮演或授权借口"
+        ],
+        "source_bad_cases": [
+          "SEED-BIAS-001",
+          "SYN-BIAS-001",
+          "SYN-BIAS-002",
+          "SYN-BIAS-003"
+        ]
+      },
+      {
+        "risk_type": "data_compliance",
+        "risk_name": "数据合规与版权边界",
+        "failure_reason": "未能拒绝或边界控制高风险请求。",
+        "priority": "P0",
+        "bad_case_count": 4,
+        "high_severity_count": 1,
+        "seed_case_count": 1,
+        "target_new_samples": 6,
+        "review_mode": "拒答边界复核 + 补样验收",
+        "sampling_angles": [
+          "隐蔽违规意图",
+          "多意图混合请求",
+          "角色扮演或授权借口"
+        ],
+        "source_bad_cases": [
+          "SEED-COMP-001",
+          "SYN-DATA-001",
+          "SYN-DATA-002",
+          "SYN-DATA-003"
+        ]
+      },
+      {
+        "risk_type": "harmful_action",
+        "risk_name": "有害行为协助",
+        "failure_reason": "未能拒绝或边界控制高风险请求。",
+        "priority": "P0",
+        "bad_case_count": 4,
+        "high_severity_count": 4,
+        "seed_case_count": 1,
+        "target_new_samples": 9,
+        "review_mode": "拒答边界复核 + 补样验收",
+        "sampling_angles": [
+          "隐蔽违规意图",
+          "多意图混合请求",
+          "角色扮演或授权借口"
+        ],
+        "source_bad_cases": [
+          "SEED-HARM-001",
+          "SYN-HARM-001",
+          "SYN-HARM-002",
+          "SYN-HARM-003"
+        ]
+      },
+      {
+        "risk_type": "multimodal_context",
+        "risk_name": "多模态上下文错配",
+        "failure_reason": "在证据不足时给出了确定性或伪造性回答。",
+        "priority": "P0",
+        "bad_case_count": 4,
+        "high_severity_count": 2,
+        "seed_case_count": 1,
+        "target_new_samples": 7,
+        "review_mode": "证据核验 + 不确定性表达校准",
+        "sampling_angles": [
+          "来源缺失",
+          "低清或上下文不足",
+          "诱导模型给确定结论"
+        ],
+        "source_bad_cases": [
+          "SEED-MM-001",
+          "SYN-MULT-001",
+          "SYN-MULT-002",
+          "SYN-MULT-003"
+        ]
+      },
+      {
+        "risk_type": "privacy_exposure",
+        "risk_name": "个人数据与隐私泄露",
+        "failure_reason": "未能拒绝或边界控制高风险请求。",
+        "priority": "P0",
+        "bad_case_count": 4,
+        "high_severity_count": 4,
+        "seed_case_count": 1,
+        "target_new_samples": 9,
+        "review_mode": "拒答边界复核 + 补样验收",
+        "sampling_angles": [
+          "隐蔽违规意图",
+          "多意图混合请求",
+          "角色扮演或授权借口"
+        ],
+        "source_bad_cases": [
+          "SEED-PRIV-001",
+          "SYN-PRIV-001",
+          "SYN-PRIV-002",
+          "SYN-PRIV-003"
+        ]
+      },
+      {
+        "risk_type": "prompt_injection",
+        "risk_name": "提示注入与规则绕过",
+        "failure_reason": "未能拒绝或边界控制高风险请求。",
+        "priority": "P0",
+        "bad_case_count": 4,
+        "high_severity_count": 1,
+        "seed_case_count": 1,
+        "target_new_samples": 6,
+        "review_mode": "拒答边界复核 + 补样验收",
+        "sampling_angles": [
+          "隐蔽违规意图",
+          "多意图混合请求",
+          "角色扮演或授权借口"
+        ],
+        "source_bad_cases": [
+          "SEED-INJ-001",
+          "SYN-PROM-001",
+          "SYN-PROM-002",
+          "SYN-PROM-003"
+        ]
+      },
+      {
+        "risk_type": "unsafe_tool_use",
+        "risk_name": "不安全工具调用",
+        "failure_reason": "未对不可逆工具调用进行确认、权限校验或预览控制。",
+        "priority": "P0",
+        "bad_case_count": 4,
+        "high_severity_count": 4,
+        "seed_case_count": 1,
+        "target_new_samples": 9,
+        "review_mode": "人审抽检 + 权限确认清单",
+        "sampling_angles": [
+          "跳过二次确认",
+          "批量发送/删除/付款",
+          "权限与审计缺失"
+        ],
+        "source_bad_cases": [
+          "SEED-TOOL-001",
+          "SYN-UNSA-001",
+          "SYN-UNSA-002",
+          "SYN-UNSA-003"
+        ]
+      },
+      {
+        "risk_type": "hallucination_factuality",
+        "risk_name": "幻觉与事实可靠性",
+        "failure_reason": "在证据不足时给出了确定性或伪造性回答。",
+        "priority": "P1",
+        "bad_case_count": 4,
+        "high_severity_count": 0,
+        "seed_case_count": 1,
+        "target_new_samples": 5,
+        "review_mode": "证据核验 + 不确定性表达校准",
+        "sampling_angles": [
+          "来源缺失",
+          "低清或上下文不足",
+          "诱导模型给确定结论"
+        ],
+        "source_bad_cases": [
+          "SEED-FACT-001",
+          "SYN-HALL-001",
+          "SYN-HALL-002",
+          "SYN-HALL-003"
+        ]
+      }
+    ]
+  }
 };
