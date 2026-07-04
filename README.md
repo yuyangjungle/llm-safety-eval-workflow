@@ -5,7 +5,8 @@ This repository contains a static demo and evidence-backed resume project for an
 Current publish status:
 
 - GitHub repository is published: https://github.com/yuyangjungle/llm-safety-eval-workflow
-- Vercel connector is reachable, but deployment still needs either Vercel Git import or a local Vercel CLI login.
+- Vercel production demo is live: https://llm-safety-eval-workflow.vercel.app
+- GitHub Pages fallback demo is live: https://yuyangjungle.github.io/llm-safety-eval-workflow/
 - Local `git push` may fail while the global git proxy points to an unavailable `127.0.0.1:7890` proxy.
 
 Open the demo locally:

@@ -5,3 +5,4 @@ chrome-profile/
 .env
 .env.*
 !.env.example
+.vercel/

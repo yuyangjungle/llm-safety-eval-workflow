@@ -2,4 +2,5 @@ tmp/
 .git/
 **/__pycache__/
 **/*.pyc
-
+requirements.txt
+llm-safety-eval-workflow/scripts/

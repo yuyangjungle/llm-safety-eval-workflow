@@ -1,11 +1,12 @@
 # Publishing Guide
 
-本项目已经发布到 GitHub，仍待完成 Vercel 在线部署。当前状态是：GitHub 仓库已创建并上传完整文件树；Vercel 连接器可响应账号信息，但直接部署仍需要一个已绑定的 Vercel 项目、GitHub 集成，或本地 Vercel CLI 登录。
+本项目已经发布到 GitHub、Vercel 与 GitHub Pages。当前状态是：GitHub 仓库已创建并上传完整文件树；Vercel 项目已创建并部署生产环境；GitHub Pages 已启用并由 Actions 自动发布。
 
 ## 当前状态
 
 - 本地 demo：`demo/index.html`
 - GitHub 仓库：<https://github.com/yuyangjungle/llm-safety-eval-workflow>
+- Vercel Demo：<https://llm-safety-eval-workflow.vercel.app>
 - GitHub Pages Demo：<https://yuyangjungle.github.io/llm-safety-eval-workflow/>
 - Vercel 根目录入口：仓库根目录 `index.html` + `vercel.json`
 - 项目内 Vercel 入口：`llm-safety-eval-workflow/index.html` + `llm-safety-eval-workflow/vercel.json`
@@ -71,9 +72,15 @@ https://yuyangjungle.github.io/llm-safety-eval-workflow/
 
 ## Vercel 发布路径
 
-推荐路径是：先把项目推送到 GitHub，再在 Vercel 中 Import 该仓库。导入后，Vercel 会根据仓库根目录的 `vercel.json` 将根路径指向 demo。
+当前 Vercel 生产环境：
 
-如果本地已安装并登录 Vercel CLI，也可以从当前工作区部署：
+```text
+https://llm-safety-eval-workflow.vercel.app
+```
+
+根目录的 `vercel.json` 将根路径指向 demo，并显式设置为静态站点，避免被 Python 脚本误判为 Python 服务。
+
+如需重新部署，可从当前工作区运行：
 
 ```powershell
 vercel deploy --prod
@@ -97,14 +104,14 @@ python scripts/verify_mvp.py
 python scripts/build_resume_pdf.py
 ```
 
-## 当前认证 blocker
+## 当前注意事项
 
 - GitHub：仓库已发布；本地 git push 仍可能被代理配置影响，但 API 发布脚本可用。
-- Vercel 连接器：可连接账号，但当前没有列出 team；直接部署仍依赖 Vercel 项目绑定或 CLI。
-- 本机 CLI：未确认有可用的 `gh` 与 `vercel` 登录态；本地 git 网络可能受 `127.0.0.1:7890` 代理影响。
+- Vercel：CLI 已登录并创建项目；`.vercel/` 与 `.env.local` 保持本地忽略，不提交到公开仓库。
+- 本机 git 网络可能受 `127.0.0.1:7890` 代理影响。
 
 ## 当前待完成
 
-1. 在 Vercel 中导入 GitHub 仓库 `yuyangjungle/llm-safety-eval-workflow`，或登录 Vercel CLI 后运行 `vercel deploy --prod`。
-2. 拿到 Vercel URL 后，更新 README 与简历 PDF 中的项目链接。
-3. 重新运行 `npm run verify` 与 `npm run resume`。
+1. 后续如有内容更新，运行 `npm run verify` 与 `npm run resume`。
+2. 用 `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\publish_via_github_api.ps1` 同步 GitHub。
+3. 用 `vercel deploy --prod` 更新 Vercel Demo。
