@@ -26,6 +26,10 @@
 
 ## 在线展示
 
+公开仓库：
+
+- GitHub：<https://github.com/yuyangjungle/llm-safety-eval-workflow>
+
 当前本地可打开：
 
 - Demo：`demo/index.html`
@@ -33,7 +37,7 @@
 - 质量报告：`docs/eval_report.md`
 - 模型评测报告：`docs/model_eval_report.md`
 
-部署到 Vercel 后，根路径会自动展示 demo。
+部署到 Vercel 或 GitHub Pages 后，根路径会自动展示 demo。
 
 ## 项目结构
 
@@ -138,4 +142,4 @@ npm run deepseek:sample
 
 - Vercel：仓库根目录的 `vercel.json` 会把 `/` 指向 demo。
 - GitHub Pages：`.github/workflows/pages.yml` 会在 push 到 `master` / `main` 后发布静态站点。
-- 当前 GitHub 连接器已可访问现有仓库；Vercel 连接器可用，但正式部署仍需要绑定 GitHub 仓库或使用本地 Vercel CLI。详细发布步骤见 `docs/publishing.md`。
+- 当前 GitHub 仓库已发布；Vercel 连接器可用，但正式部署仍需要在 Vercel 导入 GitHub 仓库或使用本地 Vercel CLI。详细发布步骤见 `docs/publishing.md`。

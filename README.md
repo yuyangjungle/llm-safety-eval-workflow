@@ -4,9 +4,9 @@ This repository contains a static demo and evidence-backed resume project for an
 
 Current publish status:
 
-- GitHub connector is authorized and can read/write existing repositories.
-- Vercel connector is reachable, but deployment still needs either a Vercel-linked GitHub repo or a local Vercel CLI login.
-- Recommended public repository name: `llm-safety-eval-workflow`.
+- GitHub repository is published: https://github.com/yuyangjungle/llm-safety-eval-workflow
+- Vercel connector is reachable, but deployment still needs either Vercel Git import or a local Vercel CLI login.
+- Local `git push` may fail while the global git proxy points to an unavailable `127.0.0.1:7890` proxy.
 
 Open the demo locally:
 

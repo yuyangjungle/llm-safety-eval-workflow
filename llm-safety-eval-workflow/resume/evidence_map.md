@@ -8,5 +8,5 @@
 | 输出质量验收报告 | `scripts/evaluate_quality.py`, `docs/eval_report.md`, `results/quality_report.json` | 运行脚本后验证 |
 | 静态 demo 展示样本浏览和质量门禁 | `demo/index.html`, `demo/app.js`, `demo/data.js` | 运行脚本后验证 |
 | 候选模型输出、rubric judge、bad case 与数据飞轮 | `data/model_outputs.json`, `scripts/judge_outputs.py`, `docs/model_eval_report.md`, `docs/data_flywheel.md` | 已完成增强版 MVP |
-| 完整字节定制简历草稿 | `resume/bytedance_ai_data_resume_full.md` | 已完成文字版，尚未排版为 PDF |
+| 完整字节定制简历草稿与 PDF | `resume/bytedance_ai_data_resume_full.md`, `resume/bytedance_ai_data_resume.pdf` | 已完成文字版与 PDF |
 | 后续可接入真实模型输出与 LLM-as-judge | `README.md`, `docs/jd_alignment.md` | 规划中，不能写成已完成 |
