@@ -7,8 +7,12 @@ on:
       - master
     paths:
       - ".github/workflows/verify.yml"
+      - ".github/workflows/pages.yml"
+      - "README.md"
+      - "index.html"
       - "package.json"
       - "requirements.txt"
+      - "scripts/verify_public_surface.py"
       - "llm-safety-eval-workflow/**"
   pull_request:
     branches:
@@ -16,8 +20,12 @@ on:
       - master
     paths:
       - ".github/workflows/verify.yml"
+      - ".github/workflows/pages.yml"
+      - "README.md"
+      - "index.html"
       - "package.json"
       - "requirements.txt"
+      - "scripts/verify_public_surface.py"
       - "llm-safety-eval-workflow/**"
   workflow_dispatch:
 
@@ -49,6 +57,9 @@ jobs:
 
       - name: Verify MVP evidence
         run: npm run verify
+
+      - name: Verify public surface
+        run: npm run verify:public
 
       - name: Upload generated reports
         uses: actions/upload-artifact@v4
