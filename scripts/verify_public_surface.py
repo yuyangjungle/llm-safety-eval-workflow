@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import struct
 from pathlib import Path
 
 
@@ -56,6 +57,17 @@ def local_target_exists(base_file: str, href: str) -> bool:
         return True
     target = (ROOT / base_file).parent / clean_href
     return target.exists()
+
+
+def png_dimensions(relative_path: str) -> tuple[int, int]:
+    path = ROOT / relative_path
+    if not path.exists():
+        return 0, 0
+    with path.open("rb") as file:
+        header = file.read(24)
+    if not header.startswith(b"\x89PNG\r\n\x1a\n") or header[12:16] != b"IHDR":
+        return 0, 0
+    return struct.unpack(">II", header[16:24])
 
 
 def meta_content(html: str, selector: str) -> str:
@@ -120,6 +132,17 @@ def main() -> None:
 
     for file in STATIC_SITE_FILES:
         checks.append(require((ROOT / file).exists(), f"static_site_file_exists:{file}"))
+
+    screenshot_path = "llm-safety-eval-workflow/results/demo-chrome-screenshot.png"
+    screenshot_file = ROOT / screenshot_path
+    screenshot_width, screenshot_height = png_dimensions(screenshot_path)
+    checks.extend(
+        [
+            require(screenshot_file.exists(), "demo_screenshot_exists"),
+            require(screenshot_width >= 1200 and screenshot_height >= 2400, "demo_screenshot_large_enough"),
+            require(screenshot_file.exists() and screenshot_file.stat().st_size >= 250_000, "demo_screenshot_has_content"),
+        ]
+    )
 
     robots = read_text("robots.txt")
     sitemap = read_text("sitemap.xml")
