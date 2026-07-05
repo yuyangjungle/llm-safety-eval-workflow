@@ -307,7 +307,15 @@ async function runLiveEval() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ sampleId: state.liveSampleId }),
     });
-    const payload = await response.json();
+    const contentType = response.headers.get("content-type") || "";
+    const rawBody = await response.text();
+    if (!contentType.includes("application/json")) {
+      if (rawBody.includes("Vercel Security Checkpoint")) {
+        throw new Error("Vercel Security Checkpoint 拦截了实时 API，请在普通浏览器中打开或调整 Vercel 防护设置。");
+      }
+      throw new Error("实时 API 返回了非 JSON 响应。");
+    }
+    const payload = JSON.parse(rawBody);
     if (!response.ok || !payload.ok) {
       throw new Error(payload.message || payload.error || "live_eval_failed");
     }

@@ -4,6 +4,12 @@
   "installCommand": null,
   "outputDirectory": ".",
   "cleanUrls": true,
+  "functions": {
+    "api/run-eval.js": {
+      "regions": ["hnd1"],
+      "maxDuration": 30
+    }
+  },
   "redirects": [
     {
       "source": "/",

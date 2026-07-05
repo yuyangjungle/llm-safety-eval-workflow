@@ -240,6 +240,9 @@ def main() -> None:
         [
             require('"destination": "/llm-safety-eval-workflow/demo/"' in vercel_config, "vercel_root_redirects_to_demo"),
             require('"framework": null' in vercel_config, "vercel_static_framework_config"),
+            require('"api/run-eval.js"' in vercel_config, "vercel_live_api_function_config"),
+            require('"regions": ["hnd1"]' in vercel_config, "vercel_live_api_region"),
+            require('"maxDuration": 30' in vercel_config, "vercel_live_api_max_duration"),
         ]
     )
 
