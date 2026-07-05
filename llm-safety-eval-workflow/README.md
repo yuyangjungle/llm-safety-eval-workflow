@@ -4,9 +4,9 @@
 [![Vercel Demo](https://img.shields.io/badge/Vercel-live-000?logo=vercel)](https://llm-safety-eval-workflow.vercel.app)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-2ea44f?logo=github)](https://yuyangjungle.github.io/llm-safety-eval-workflow/)
 
-面向 AI 数据与安全方向的离线 MVP：从风险分类、样本生产、schema 校验、模型输出评测到 bad case 迭代，模拟一条小型的大模型安全评测数据基建 workflow。
+面向 AI 数据与安全方向的安全评测数据 workflow：从风险分类、样本生产、schema 校验、模型输出评测到 bad case 迭代，模拟一条小型的大模型安全评测数据基建流程，并补充 Vercel Serverless 实时单样本模型评测。
 
-[Vercel Demo](https://llm-safety-eval-workflow.vercel.app) · [GitHub Pages](https://yuyangjungle.github.io/llm-safety-eval-workflow/) · [HR Snapshot](docs/hr_snapshot.md) · [Interview Brief](docs/interview_brief.md) · [Sampling Plan](docs/next_sampling_plan.md) · [Human Review](docs/human_review_protocol.md) · [Case Study](docs/case_study.md) · [Verification Guide](docs/verification.md) · [Model Eval Report](docs/model_eval_report.md)
+[Vercel Demo](https://llm-safety-eval-workflow.vercel.app) · [GitHub Pages](https://yuyangjungle.github.io/llm-safety-eval-workflow/) · [HR Snapshot](docs/hr_snapshot.md) · [Interview Brief](docs/interview_brief.md) · [Live API Eval](docs/live_api_eval.md) · [Sampling Plan](docs/next_sampling_plan.md) · [Human Review](docs/human_review_protocol.md) · [Case Study](docs/case_study.md) · [Verification Guide](docs/verification.md) · [Model Eval Report](docs/model_eval_report.md)
 
 ![Demo screenshot](results/demo-chrome-screenshot.png)
 
@@ -16,7 +16,8 @@
 
 - 把抽象的大模型安全风险拆成可生产、可验收的数据分类体系。
 - 设计结构化样本 schema、expected behavior 和 rubric judge。
-- 搭建 seed sample -> synthetic expansion -> quality gates -> model eval -> bad case flywheel 的离线流程。
+- 搭建 seed sample -> synthetic expansion -> quality gates -> model eval -> bad case flywheel 的可复现流程。
+- 通过 Vercel Serverless Function 安全读取模型 API key，实现单条样本的线上实时模型调用与即时 judge。
 - 用可解释的指标和 dashboard，把数据质量、模型输出差异和迭代动作讲清楚。
 
 ## 当前结果
@@ -28,7 +29,8 @@
 | 质量门禁 | schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率均为 100% |
 | 候选输出 | `baseline_naive_v0` 与 `safety_workflow_v1` 两组输出，共 64 条 |
 | 模型评测 | rubric judge 输出 pass rate、bad case、失败原因和补样建议 |
-| 展示产物 | Vercel demo、GitHub Pages demo、case study、model report、bad case triage、next sampling plan、human review queue、简历项目描述 |
+| 实时调用 | Vercel `/api/run-eval` 按 sampleId 调用模型 API，返回输出、judge 分数和数据动作 |
+| 展示产物 | Vercel demo、GitHub Pages demo、case study、model report、bad case triage、live API eval、next sampling plan、human review queue、简历项目描述 |
 
 ## HR 快速判断
 
@@ -127,9 +129,11 @@ npm run deepseek:sample
 
 脚本只从环境变量读取 key，不会把 key 写入仓库。详细说明见 [deepseek_integration.md](docs/deepseek_integration.md)。
 
-## MVP 边界
+线上实时评测说明见 [live_api_eval.md](docs/live_api_eval.md)。生产环境需要在 Vercel 配置 `DEEPSEEK_API_KEY`，前端不会接触密钥。
+
+## 项目边界
 
 - 样本是人工 seed + 模板化合成数据，用于展示数据生产流程，不代表真实业务数据。
 - 当前 judge 是可复现的规则化 rubric judge，不等同于真实线上 LLM-as-judge 或人工审核系统。
-- 当前 demo 是静态 dashboard，重点验证 workflow、数据结构和展示表达。
-- 后续可以继续补真实 LLM API 输出、多轮 judge、人审抽检、错误聚类和数据版本管理。
+- 当前 Vercel demo 已支持单条样本实时模型 API 调用，但不等同于生产级评测平台。
+- 后续可以继续补数据库、任务队列、登录权限、人审操作、成本监控、错误聚类和数据版本管理。

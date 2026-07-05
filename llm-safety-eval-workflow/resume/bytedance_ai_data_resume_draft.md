@@ -10,15 +10,15 @@ AI 数据产品 / LLM 安全评测 / 数据生产链路 / 合成数据 / Agentic
 
 ## 项目经历建议排序
 
-### LLM 安全评测数据生产与质量验收 Workflow MVP
+### 大模型安全评测数据生产与质量验收 Workflow
 
-产品设计 / 数据策略 / Python 原型搭建｜2026年07月 - 至今
+产品设计 / 数据策略 / Python 原型搭建｜2026年03月 - 至今
 
 - 面向大模型安全评测场景，设计覆盖个人数据与隐私泄露、提示注入、有害行为、幻觉事实性、偏见公平性、不安全工具调用、数据合规与多模态上下文错配等 8 类风险的数据分类体系。
 - 定义评测样本 schema，包含风险类型、场景、用户 prompt、期望行为、严重度、难度、是否拒答及 judge rubric 等字段，支撑样本生产、规则校验和后续人工抽检。
 - 搭建「种子样本 -> 模板化合成样本 -> Schema 校验 -> 质量指标统计 -> 评估报告」的离线数据生产 Workflow，生成 32 条 MVP 样本并输出质量验收报告。
 - 设计 schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率、难度分布等质量门禁，并通过静态 demo 展示样本浏览、风险筛选和质量评估结果。
-- 项目证据：GitHub `github.com/yuyangjungle/llm-safety-eval-workflow`；Demo `llm-safety-eval-workflow.vercel.app`。
+- 项目证据：Demo `llm-safety-eval-workflow.vercel.app`。
 
 ### 文本预处理技术对大语言模型性能影响的研究
 

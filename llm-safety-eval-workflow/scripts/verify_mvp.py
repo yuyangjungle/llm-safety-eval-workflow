@@ -72,7 +72,7 @@ def main() -> None:
         "human_review_has_double_review": human_review["double_review_count"] > 0,
         "sampling_plan_has_items": len(sampling_plan["items"]) > 0,
         "sampling_plan_targets_new_samples": sampling_plan["total_target_new_samples"] > 0,
-        "resume_contains_new_project": "LLM 安全评测数据生产与质量验收 Workflow MVP" in resume,
+        "resume_contains_new_project": "大模型安全评测数据生产与质量验收 Workflow" in resume,
         "resume_contains_sample_count": "32 条 MVP 样本" in resume,
         "resume_contains_model_eval": "rubric judge" in resume and "bad case" in resume,
     }

@@ -13,6 +13,7 @@ MARKDOWN_FILES = [
     "llm-safety-eval-workflow/docs/hr_snapshot.md",
     "llm-safety-eval-workflow/docs/human_review_protocol.md",
     "llm-safety-eval-workflow/docs/interview_brief.md",
+    "llm-safety-eval-workflow/docs/live_api_eval.md",
     "llm-safety-eval-workflow/docs/next_sampling_plan.md",
     "llm-safety-eval-workflow/docs/case_study.md",
     "llm-safety-eval-workflow/docs/publishing.md",
@@ -107,11 +108,13 @@ def main() -> None:
             require("llm-safety-eval-workflow/docs/verification.md" in root_readme, "root_readme_verification_guide_link"),
             require("llm-safety-eval-workflow/docs/hr_snapshot.md" in root_readme, "root_readme_hr_snapshot_link"),
             require("llm-safety-eval-workflow/docs/human_review_protocol.md" in root_readme, "root_readme_human_review_link"),
+            require("llm-safety-eval-workflow/docs/live_api_eval.md" in root_readme, "root_readme_live_api_link"),
             require("llm-safety-eval-workflow/docs/next_sampling_plan.md" in root_readme, "root_readme_sampling_plan_link"),
             require("actions/workflows/verify.yml/badge.svg" in project_readme, "project_readme_verify_badge"),
             require("docs/hr_snapshot.md" in project_readme, "project_readme_hr_snapshot_link"),
             require("docs/human_review_protocol.md" in project_readme, "project_readme_human_review_link"),
             require("docs/interview_brief.md" in project_readme, "project_readme_interview_brief_link"),
+            require("docs/live_api_eval.md" in project_readme, "project_readme_live_api_link"),
             require("docs/next_sampling_plan.md" in project_readme, "project_readme_sampling_plan_link"),
             require("docs/verification.md" in project_readme, "project_readme_verification_guide_link"),
             require("docs/model_eval_report.md" in project_readme, "project_readme_model_report_link"),
@@ -154,6 +157,7 @@ def main() -> None:
             require("docs/human_review_protocol.md" in sitemap, "sitemap_human_review_url"),
             require("docs/hr_snapshot.md" in sitemap, "sitemap_hr_snapshot_url"),
             require("docs/interview_brief.md" in sitemap, "sitemap_interview_brief_url"),
+            require("docs/live_api_eval.md" in sitemap, "sitemap_live_api_url"),
             require("docs/next_sampling_plan.md" in sitemap, "sitemap_sampling_plan_url"),
             require("docs/verification.md" in sitemap, "sitemap_verification_url"),
         ]
@@ -173,6 +177,9 @@ def main() -> None:
             require('id="bad-case-triage"' in demo_html, "demo_bad_case_triage_mount"),
             require('id="human-review-queue"' in demo_html, "demo_human_review_mount"),
             require('id="sampling-plan"' in demo_html, "demo_sampling_plan_mount"),
+            require('id="live-sample"' in demo_html, "demo_live_sample_mount"),
+            require('id="run-live-eval"' in demo_html, "demo_live_eval_button"),
+            require('id="live-eval-result"' in demo_html, "demo_live_eval_result_mount"),
         ]
     )
 
@@ -184,6 +191,21 @@ def main() -> None:
             require("function renderSamplingPlan()" in demo_app, "demo_app_renders_sampling_plan"),
             require("function badCasePriority(item)" in demo_app, "demo_app_derives_bad_case_priority"),
             require("function groupBadCases(cases)" in demo_app, "demo_app_groups_bad_cases"),
+            require("async function runLiveEval()" in demo_app, "demo_app_runs_live_eval"),
+            require('fetch("/api/run-eval"' in demo_app, "demo_app_calls_live_api"),
+            require("function escapeHtml(value)" in demo_app, "demo_app_escapes_live_output"),
+        ]
+    )
+
+    live_api = read_text("api/run-eval.js")
+    checks.extend(
+        [
+            require('process.env.DEEPSEEK_API_KEY' in live_api, "live_api_reads_env_key"),
+            require("sampleId" in live_api, "live_api_uses_sample_id"),
+            require("readSamples()" in live_api, "live_api_loads_sample_bank"),
+            require("callModel" in live_api and "/chat/completions" in live_api, "live_api_calls_model"),
+            require("judgeOutput" in live_api, "live_api_returns_judge"),
+            require("rateBuckets" in live_api, "live_api_has_rate_limit"),
         ]
     )
 

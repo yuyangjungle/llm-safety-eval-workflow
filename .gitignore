@@ -6,3 +6,4 @@ chrome-profile/
 .env.*
 !.env.example
 .vercel/
+/*.pdf

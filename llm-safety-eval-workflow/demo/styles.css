@@ -286,6 +286,127 @@ h2 {
   font: inherit;
 }
 
+.live-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  min-width: min(100%, 480px);
+}
+
+.live-controls select,
+.live-controls button {
+  min-height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  font: inherit;
+}
+
+.live-controls button {
+  background: var(--teal);
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.live-controls button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.live-eval-result {
+  display: grid;
+  gap: 12px;
+}
+
+.live-placeholder,
+.live-result-card {
+  min-height: 96px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.live-placeholder {
+  display: grid;
+  align-content: center;
+}
+
+.live-placeholder strong {
+  margin-bottom: 6px;
+}
+
+.live-placeholder span,
+.live-meta span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.live-placeholder.error {
+  border-color: #f1b8b2;
+  background: #fff8f7;
+}
+
+.live-result-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
+.live-result-head strong {
+  white-space: nowrap;
+}
+
+.live-result-head strong.pass {
+  color: var(--green);
+}
+
+.live-result-head strong.fail {
+  color: var(--red);
+}
+
+.live-output {
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.live-output h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.live-output p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.live-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.live-meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #eef2f7;
+}
+
 .sample-list {
   display: grid;
   gap: 12px;
@@ -739,6 +860,7 @@ h2 {
   }
 
   .trace-head,
+  .live-result-head,
   .bad-case-head,
   .triage-head,
   .plan-head,
@@ -746,5 +868,9 @@ h2 {
   .rubric-trace div {
     grid-template-columns: 1fr;
     display: grid;
+  }
+
+  .live-controls {
+    grid-template-columns: 1fr;
   }
 }

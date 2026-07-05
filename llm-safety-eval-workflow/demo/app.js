@@ -3,6 +3,10 @@ const data = window.WORKFLOW_DATA;
 const state = {
   riskType: "all",
   query: "",
+  liveSampleId: data.samples[0]?.id || "",
+  liveEvalLoading: false,
+  liveEvalResult: null,
+  liveEvalError: "",
 };
 
 const taxonomyById = Object.fromEntries(data.taxonomy.map((item) => [item.id, item]));
@@ -16,6 +20,15 @@ const judgeByKey = Object.fromEntries(
 
 function pct(value) {
   return `${Math.round(value * 100)}%`;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 const priorityRank = {
@@ -181,6 +194,130 @@ function renderGates() {
       `;
     })
     .join("");
+}
+
+function renderLiveEvalPanel() {
+  const select = document.getElementById("live-sample");
+  if (!select) return;
+  select.innerHTML = data.samples
+    .map((sample) => {
+      const taxonomy = taxonomyById[sample.risk_type];
+      return `
+        <option value="${escapeHtml(sample.id)}" ${state.liveSampleId === sample.id ? "selected" : ""}>
+          ${escapeHtml(sample.id)} / ${escapeHtml(taxonomy?.name || sample.risk_type)}
+        </option>
+      `;
+    })
+    .join("");
+  renderLiveEvalResult();
+}
+
+function renderLiveEvalResult() {
+  const el = document.getElementById("live-eval-result");
+  const button = document.getElementById("run-live-eval");
+  if (!el || !button) return;
+
+  button.disabled = state.liveEvalLoading;
+  button.textContent = state.liveEvalLoading ? "评测中..." : "运行实时评测";
+
+  if (state.liveEvalLoading) {
+    el.innerHTML = `
+      <article class="live-placeholder">
+        <strong>正在调用后端模型 API</strong>
+        <span>样本 ${escapeHtml(state.liveSampleId)} · 返回后自动展示 judge 结果</span>
+      </article>
+    `;
+    return;
+  }
+
+  if (state.liveEvalError) {
+    el.innerHTML = `
+      <article class="live-placeholder error">
+        <strong>实时评测暂不可用</strong>
+        <span>${escapeHtml(state.liveEvalError)}</span>
+      </article>
+    `;
+    return;
+  }
+
+  if (!state.liveEvalResult) {
+    const sample = sampleById[state.liveSampleId];
+    el.innerHTML = `
+      <article class="live-placeholder">
+        <strong>${escapeHtml(sample?.id || "选择样本")}</strong>
+        <span>${escapeHtml(sample?.scenario || "选择一条样本后运行实时评测")}</span>
+      </article>
+    `;
+    return;
+  }
+
+  const result = state.liveEvalResult;
+  const judge = result.judge;
+  const sample = result.sample;
+  const statusClass = judge.pass ? "pass" : "fail";
+  const statusText = judge.pass ? "PASS" : "REVIEW";
+  el.innerHTML = `
+    <article class="live-result-card">
+      <div class="live-result-head">
+        <div>
+          <span class="tag">${escapeHtml(sample.id)}</span>
+          <span class="tag">${escapeHtml(sample.risk_type)}</span>
+          <span class="tag">${escapeHtml(result.model)}</span>
+        </div>
+        <strong class="${statusClass}">${statusText} · ${pct(judge.final_score)}</strong>
+      </div>
+      <p class="prompt">${escapeHtml(sample.user_prompt)}</p>
+      <div class="live-output">
+        <h3>实时模型输出</h3>
+        <p>${escapeHtml(result.model_output)}</p>
+      </div>
+      <div class="rubric-trace">
+        ${judge.rubric_scores
+          .map(
+            (item) => `
+              <div>
+                <span>${escapeHtml(item.criterion)}</span>
+                <strong>${item.score ? "PASS" : "MISS"} · ${Math.round(item.weight * 100)}%</strong>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
+      <p class="data-action">
+        ${judge.pass ? "数据动作：当前样本通过实时 judge。" : `数据动作：${escapeHtml(judge.recommended_data_action)}`}
+      </p>
+      <div class="live-meta">
+        <span>${escapeHtml(result.generated_at)}</span>
+        <span>${result.latency_ms} ms</span>
+        <span>${escapeHtml(result.scope_note)}</span>
+      </div>
+    </article>
+  `;
+}
+
+async function runLiveEval() {
+  state.liveEvalLoading = true;
+  state.liveEvalError = "";
+  state.liveEvalResult = null;
+  renderLiveEvalResult();
+
+  try {
+    const response = await fetch("/api/run-eval", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sampleId: state.liveSampleId }),
+    });
+    const payload = await response.json();
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.message || payload.error || "live_eval_failed");
+    }
+    state.liveEvalResult = payload;
+  } catch (error) {
+    state.liveEvalError = error.message || "实时评测请求失败";
+  } finally {
+    state.liveEvalLoading = false;
+    renderLiveEvalResult();
+  }
 }
 
 function renderModelEval() {
@@ -416,12 +553,20 @@ function bindEvents() {
     state.query = event.target.value;
     renderSamples();
   });
+  document.getElementById("live-sample").addEventListener("change", (event) => {
+    state.liveSampleId = event.target.value;
+    state.liveEvalResult = null;
+    state.liveEvalError = "";
+    renderLiveEvalPanel();
+  });
+  document.getElementById("run-live-eval").addEventListener("click", runLiveEval);
 }
 
 renderMetrics();
 renderFilters();
 renderSamples();
 renderGates();
+renderLiveEvalPanel();
 renderModelEval();
 renderJudgeTrace();
 renderBadCaseTriage();
