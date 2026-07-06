@@ -2,7 +2,7 @@
 
 18136104181 | yuyangj@kth.se
 
-AI 数据产品 / LLM 安全评测 / 数据生产链路 / 合成数据 / Agentic Workflow / Python
+AI 数据产品 / LLM 安全评测 / 数据生产链路 / 质量验收 / Agentic Workflow / Python
 
 关注大模型训练与评测数据的生产、质量验收和自动化流程搭建，具备 AI 产品设计、模型评估、数据分析与基础工程实现能力。
 
@@ -43,11 +43,12 @@ Java 工程师实习生｜2024年07月 - 2024年08月
 
 - 面向大模型安全评测场景，设计覆盖个人数据与隐私泄露、提示注入、有害行为、幻觉事实性、偏见公平性、不安全工具调用、数据合规与多模态上下文错配等 8 类风险的数据分类体系。
 - 定义评测样本 schema，包含风险类型、业务场景、用户 prompt、期望行为、严重度、难度、是否拒答及 judge rubric 等字段，支撑样本生产、规则校验和后续人工抽检。
-- 搭建「种子样本 -> 模板化合成样本 -> Schema 校验 -> 质量指标统计 -> 评估报告」的离线数据生产 Workflow，生成 32 条 MVP 样本并输出质量验收报告。
-- 设计 schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率、难度分布等质量门禁，并通过静态 demo 展示样本浏览、风险筛选和质量评估结果。
-- 补充候选模型输出样例与 rubric judge 流程，对 baseline 与 safety workflow 两组输出进行评测，沉淀 bad case 归因和「评测结果 -> 数据动作 -> 补样策略」的数据飞轮思路。
+- 搭建「样本池 -> 实时模型响应 -> rubric judge -> 人审队列 / bad case -> 数据动作 -> 下一轮补样」的安全评测数据 Workflow，生成 32 条评测样本并输出质量验收报告。
+- 设计 schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率、难度分布等质量门禁，并通过线上 dashboard 展示样本浏览、风险筛选、Recent Runs 和质量评估结果。
+- 补充 64 条候选模型输出与 rubric judge 流程，对 baseline 与 safety workflow 两组输出进行评测，沉淀 bad case 归因和「评测结果 -> 数据动作 -> 补样策略」的数据飞轮思路。
+- 通过 Vercel Serverless 接入模型 API，实现单样本实时安全评测，返回模型输出、judge 分数、延迟、usage 和推荐数据动作；密钥仅在服务端环境变量读取。
 
-项目证据：Demo `llm-safety-eval-workflow.vercel.app`；`docs/eval_report.md`, `docs/model_eval_report.md`
+项目证据：Demo `llm-safety-eval-workflow.vercel.app`；GitHub `github.com/yuyangjungle/llm-safety-eval-workflow`
 
 ### 文本预处理技术对大语言模型性能影响的研究
 
@@ -73,6 +74,6 @@ Java 工程师实习生｜2024年07月 - 2024年08月
 ## 专业技能
 
 - 产品能力：需求分析、竞品调研、PRD/MRD、用户流程设计、原型设计、数据分析、指标体系设计、跨团队协作
-- AI / 数据：LLM、模型评测、合成数据、数据质量验收、Fine-tuning、LoRA、QLoRA、Prompt Workflow、Agentic Workflow、Pandas、数据清洗、实验结果分析
+- AI / 数据：LLM、模型评测、样本生产、数据质量验收、Fine-tuning、LoRA、QLoRA、Prompt Workflow、Agentic Workflow、Pandas、数据清洗、实验结果分析
 - 技术能力：Python、Java、JavaScript、React、Vite、API 调用、后端接口联调、缓存机制、参数校验、fallback 机制
 - 技术理解：云计算、GPU 云服务、模型训练/推理流程、开发者工具、容器化、虚拟化、AI Infra

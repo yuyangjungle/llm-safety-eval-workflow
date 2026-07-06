@@ -4,9 +4,9 @@
 [![Vercel Demo](https://img.shields.io/badge/Vercel-live-000?logo=vercel)](https://llm-safety-eval-workflow.vercel.app)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-2ea44f?logo=github)](https://yuyangjungle.github.io/llm-safety-eval-workflow/)
 
-An AI Data & Safety workflow release candidate for LLM safety evaluation data production and quality acceptance. It connects risk taxonomy, sample schema, sample generation, model response, rubric judge, bad case analysis, data action, and next-round sampling in one explainable dashboard.
+An AI Data & Safety workflow demo for LLM safety evaluation data production and quality acceptance. It connects risk taxonomy, sample schema, sample generation, model response, rubric judge, bad case analysis, data action, and next-round sampling in one explainable dashboard.
 
-[Vercel Demo](https://llm-safety-eval-workflow.vercel.app) · [GitHub Pages](https://yuyangjungle.github.io/llm-safety-eval-workflow/) · [Project Snapshot](docs/hr_snapshot.md) · [Product Brief](docs/interview_brief.md) · [Live API Eval](docs/live_api_eval.md) · [Sampling Plan](docs/next_sampling_plan.md) · [Human Review](docs/human_review_protocol.md) · [Case Study](docs/case_study.md) · [Release Notes v0.2.0](docs/release_notes_v0.2.0.md) · [Verification Guide](docs/verification.md) · [Model Eval Report](docs/model_eval_report.md)
+[Vercel Demo](https://llm-safety-eval-workflow.vercel.app) · [GitHub Pages](https://yuyangjungle.github.io/llm-safety-eval-workflow/) · [Project Snapshot](docs/hr_snapshot.md) · [Product Brief](docs/interview_brief.md) · [Demo Walkthrough](docs/interview_walkthrough.md) · [Live API Eval](docs/live_api_eval.md) · [Sampling Plan](docs/next_sampling_plan.md) · [Human Review](docs/human_review_protocol.md) · [Case Study](docs/case_study.md) · [Release Notes v0.3.0](docs/release_notes_v0.3.0.md) · [Verification Guide](docs/verification.md) · [Model Eval Report](docs/model_eval_report.md)
 
 ![Demo screenshot](results/demo-chrome-screenshot.png)
 
@@ -28,7 +28,12 @@ An AI Data & Safety workflow release candidate for LLM safety evaluation data pr
 | Quality gates | Schema completeness, taxonomy coverage, prompt uniqueness, and rubric completeness checks |
 | Rubric judge | Rule-based, reproducible judge results with pass rate, score, bad case, failure reason, and recommended data action |
 | Live eval | Vercel `/api/run-eval` calls the configured model API by `sampleId` and returns judge output without exposing the key |
-| Dashboard | Product metrics, workflow path, live eval, recent runs, bad case flywheel, sampling plan, human review queue, and sample explorer |
+| Fallback demo | If live eval fails, the UI shows a clearly marked cached demo result so the walkthrough does not break |
+| Dashboard | Product metrics, demo walkthrough, workflow path, live eval, recent runs, recommended data actions, bad case flywheel, sampling plan, human review queue, roadmap, and sample explorer |
+
+## Real API Path
+
+The browser sends only `sampleId` to `/api/run-eval`. The Vercel Serverless Function loads the selected sample, reads `DEEPSEEK_API_KEY` from environment variables, calls the model API, runs rubric judge logic, and returns sanitized model output, final score, pass/review status, latency, token usage, and recommended data action.
 
 ## Workflow
 
@@ -41,13 +46,14 @@ flowchart LR
   E --> F["Next Sampling"]
 ```
 
-## Not Production-Grade Yet
+## Limitations
 
-This project is a portfolio MVP and release candidate. It is intentionally lightweight and does not claim to be a production labeling or evaluation platform.
+This project is an online MVP demo. It is intentionally lightweight and does not claim to be a production labeling or evaluation platform.
 
 - Samples are manually seeded plus template-generated data, not real business traffic.
 - The current judge is a reproducible rubric implementation, not a full LLM-as-judge service with calibration and adjudication.
 - Recent Runs and Human Review Queue are dashboard-level views derived from local artifacts and live session state, not persisted product records.
+- Recommended Data Actions and Production Roadmap are product views, not backed by workflow execution infrastructure.
 - The live API supports single-sample evaluation, not batch jobs or queue-backed evaluation pipelines.
 
 ## Next Steps Toward Production
@@ -85,8 +91,10 @@ llm-safety-eval-workflow/
     data_taxonomy.md
     hr_snapshot.md
     interview_brief.md
+    interview_walkthrough.md
     live_api_eval.md
     model_eval_report.md
+    release_notes_v0.3.0.md
     release_notes_v0.2.0.md
     verification.md
   scripts/

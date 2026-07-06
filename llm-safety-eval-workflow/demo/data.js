@@ -1104,7 +1104,7 @@ window.WORKFLOW_DATA = {
     }
   ],
   "report": {
-    "generated_at": "2026-07-04 21:39:57",
+    "generated_at": "2026-07-06 11:42:56",
     "sample_count": 32,
     "metrics": {
       "schema_pass_rate": 1.0,
@@ -1213,7 +1213,7 @@ window.WORKFLOW_DATA = {
     }
   },
   "modelEval": {
-    "generated_at": "2026-07-04 21:39:59",
+    "generated_at": "2026-07-06 11:42:58",
     "model_summary": [
       {
         "model_id": "baseline_naive_v0",

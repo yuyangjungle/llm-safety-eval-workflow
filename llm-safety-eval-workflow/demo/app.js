@@ -9,6 +9,15 @@ const state = {
   liveEvalError: "",
 };
 
+const productionRoadmap = [
+  ["Batch evaluation", "把单样本评测扩展为批量任务，支持队列、重试和任务状态。"],
+  ["Persistent history", "保存每次评测的样本、模型版本、judge 分数、延迟和数据动作。"],
+  ["Human review console", "支持复核分配、双人审核、冲突仲裁和抽检结果回写。"],
+  ["Model version comparison", "按模型、prompt、rubric 版本追踪 pass rate 和 bad case 变化。"],
+  ["Cost & latency monitor", "监控 token 使用、单次成本、延迟分布和异常率。"],
+  ["Access control & audit log", "增加权限、密钥治理、操作审计和数据版本追溯。"],
+];
+
 const taxonomyById = Object.fromEntries(data.taxonomy.map((item) => [item.id, item]));
 const sampleById = Object.fromEntries(data.samples.map((item) => [item.id, item]));
 const outputByKey = Object.fromEntries(
@@ -106,6 +115,52 @@ function dataActionText(judge) {
   return judge.pass
     ? "Accept: 当前样本通过 rubric judge，可进入通过样本池。"
     : `Action: ${judge.recommended_data_action || "转入 bad case 归因与下一轮补样。"}`;
+}
+
+function buildCachedEvalResult(reason) {
+  const sample = sampleById[state.liveSampleId] || data.samples[0];
+  const modelId = "safety_workflow_v1";
+  const output = outputByKey[`${sample.id}:${modelId}`] || outputByKey[`${sample.id}:baseline_naive_v0`];
+  const judge = judgeByKey[`${sample.id}:${modelId}`] || judgeByKey[`${sample.id}:baseline_naive_v0`];
+
+  return {
+    ok: true,
+    live: false,
+    cached: true,
+    fallback_reason: reason,
+    generated_at: new Date().toISOString(),
+    model: `${modelId} cached`,
+    latency_ms: 0,
+    usage: null,
+    sample: {
+      id: sample.id,
+      risk_type: sample.risk_type,
+      scenario: sample.scenario,
+      user_prompt: sample.user_prompt,
+      expected_behavior: sample.expected_behavior,
+      severity: sample.label?.severity,
+      difficulty: sample.label?.difficulty,
+    },
+    model_output: output?.output || "缓存样例：当前请求被切换到可复现 demo 输出，便于继续展示 judge 和数据动作。",
+    judge: judge || {
+      sample_id: sample.id,
+      model_id: modelId,
+      risk_type: sample.risk_type,
+      expected_behavior: sample.expected_behavior,
+      final_score: 1,
+      pass: true,
+      failure_reason: "",
+      recommended_data_action: "",
+      rubric_scores: sample.rubric.map((item) => ({
+        criterion: item.criterion,
+        weight: item.weight,
+        score: 1,
+        weighted_score: item.weight,
+      })),
+    },
+    scope_note:
+      "Cached demo result: live API 暂不可用时展示的本地评测样例，用于面试演示不中断；不代表新的线上模型调用。",
+  };
 }
 
 function renderMetrics() {
@@ -240,7 +295,7 @@ function renderLiveEvalResult() {
     return;
   }
 
-  if (state.liveEvalError) {
+  if (state.liveEvalError && !state.liveEvalResult) {
     el.innerHTML = `
       <article class="live-placeholder error">
         <strong>实时评测暂不可用</strong>
@@ -266,10 +321,17 @@ function renderLiveEvalResult() {
   const sample = result.sample;
   const statusClass = judge.pass ? "pass" : "fail";
   const statusText = judge.pass ? "PASS" : "REVIEW";
+  const sourceText = result.live ? "Live API result" : "Cached demo result";
+  const sourceClass = result.live ? "pass" : "cached";
   const promptTokens = result.usage?.prompt_tokens ?? "-";
   const completionTokens = result.usage?.completion_tokens ?? "-";
   el.innerHTML = `
     <article class="live-result-card">
+      ${
+        result.cached
+          ? `<div class="live-banner cached"><strong>Cached demo result</strong><span>Live API 请求失败时自动展示可复现样例：${escapeHtml(result.fallback_reason || "fallback enabled")}</span></div>`
+          : `<div class="live-banner live"><strong>Live API result</strong><span>本次结果来自 Vercel Serverless 实时模型调用。</span></div>`
+      }
       <div class="live-result-head">
         <div>
           <span class="tag">${escapeHtml(sample.id)}</span>
@@ -280,16 +342,16 @@ function renderLiveEvalResult() {
       </div>
       <div class="live-status-grid">
         <div>
+          <span>Source</span>
+          <strong class="${sourceClass}">${sourceText}</strong>
+        </div>
+        <div>
           <span>Status</span>
           <strong class="${statusClass}">${statusText}</strong>
         </div>
         <div>
-          <span>Model</span>
-          <strong>${escapeHtml(result.model)}</strong>
-        </div>
-        <div>
           <span>Latency</span>
-          <strong>${result.latency_ms} ms</strong>
+          <strong>${result.live ? `${result.latency_ms} ms` : "cached"}</strong>
         </div>
         <div>
           <span>Usage</span>
@@ -298,7 +360,7 @@ function renderLiveEvalResult() {
       </div>
       <p class="prompt">${escapeHtml(sample.user_prompt)}</p>
       <div class="live-output">
-        <h3>实时模型输出</h3>
+        <h3>${result.live ? "实时模型输出" : "缓存模型输出"}</h3>
         <p>${escapeHtml(result.model_output)}</p>
       </div>
       <div class="rubric-trace">
@@ -318,7 +380,7 @@ function renderLiveEvalResult() {
       </p>
       <div class="live-meta">
         <span>${escapeHtml(result.generated_at)}</span>
-        <span>${result.latency_ms} ms</span>
+        <span>${escapeHtml(result.model)}</span>
         <span>${escapeHtml(result.scope_note)}</span>
       </div>
     </article>
@@ -352,6 +414,7 @@ async function runLiveEval() {
     state.liveEvalResult = payload;
   } catch (error) {
     state.liveEvalError = error.message || "实时评测请求失败";
+    state.liveEvalResult = buildCachedEvalResult(state.liveEvalError);
   } finally {
     state.liveEvalLoading = false;
     renderLiveEvalResult();
@@ -366,13 +429,13 @@ function renderRecentRuns() {
   const liveRun = state.liveEvalResult
     ? [
         {
-          source: "Live API",
+          source: state.liveEvalResult.live ? "Live API" : "Cached demo",
           sampleId: state.liveEvalResult.sample.id,
           modelId: state.liveEvalResult.model,
           riskName: taxonomyById[state.liveEvalResult.sample.risk_type]?.name || state.liveEvalResult.sample.risk_type,
           score: state.liveEvalResult.judge.final_score,
           pass: state.liveEvalResult.judge.pass,
-          latency: `${state.liveEvalResult.latency_ms} ms`,
+          latency: state.liveEvalResult.live ? `${state.liveEvalResult.latency_ms} ms` : "cached",
           action: dataActionText(state.liveEvalResult.judge),
         },
       ]
@@ -414,6 +477,46 @@ function renderRecentRuns() {
             ${run.severity ? `<span>${escapeHtml(run.severity)}</span>` : ""}
           </div>
           <p class="data-action">${escapeHtml(run.action)}</p>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderRecommendedActions() {
+  const el = document.getElementById("recommended-actions");
+  if (!el) return;
+  const groups = groupBadCases(sortedBadCases()).slice(0, 4);
+  el.innerHTML = groups
+    .map(
+      (group) => `
+        <article class="action-card">
+          <div class="action-head">
+            <span class="priority-tag ${group.priority.toLowerCase()}">${group.priority}</span>
+            <strong>${escapeHtml(group.reason)}</strong>
+          </div>
+          <p>${escapeHtml(group.action)}</p>
+          <div class="run-meta">
+            <span>${group.count} bad cases</span>
+            <span>${group.riskTypes.size} risk types</span>
+            <span>${[...group.statuses].map(escapeHtml).join(" / ")}</span>
+          </div>
+        </article>
+      `,
+    )
+    .join("");
+}
+
+function renderProductionRoadmap() {
+  const el = document.getElementById("production-roadmap");
+  if (!el) return;
+  el.innerHTML = productionRoadmap
+    .map(
+      ([title, detail], index) => `
+        <article class="roadmap-card">
+          <span class="tag">Step ${index + 1}</span>
+          <strong>${escapeHtml(title)}</strong>
+          <p>${escapeHtml(detail)}</p>
         </article>
       `,
     )
@@ -668,10 +771,12 @@ renderSamples();
 renderGates();
 renderLiveEvalPanel();
 renderRecentRuns();
+renderRecommendedActions();
 renderModelEval();
 renderJudgeTrace();
 renderBadCaseTriage();
 renderSamplingPlan();
 renderHumanReviewQueue();
 renderBadCases();
+renderProductionRoadmap();
 bindEvents();

@@ -247,6 +247,46 @@ h2 {
   line-height: 1.45;
 }
 
+.walkthrough-steps,
+.action-grid,
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.walkthrough-steps article,
+.action-card,
+.roadmap-card {
+  min-height: 132px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.walkthrough-steps strong,
+.action-card strong,
+.roadmap-card strong {
+  display: block;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.walkthrough-steps span,
+.action-card p,
+.roadmap-card p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.action-grid,
+.roadmap-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .layout {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
@@ -368,6 +408,45 @@ h2 {
   background: #fff8f7;
 }
 
+.live-banner {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.live-banner strong {
+  white-space: nowrap;
+}
+
+.live-banner span {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.live-banner.live {
+  border-color: #b7dcc1;
+  background: #eef8f1;
+}
+
+.live-banner.live strong {
+  color: var(--green);
+}
+
+.live-banner.cached {
+  border-color: #f0d49c;
+  background: #fff9ec;
+}
+
+.live-banner.cached strong {
+  color: var(--amber);
+}
+
 .live-result-head {
   display: flex;
   justify-content: space-between;
@@ -430,6 +509,10 @@ h2 {
 
 .live-status-grid strong.fail {
   color: var(--red);
+}
+
+.live-status-grid strong.cached {
+  color: var(--amber);
 }
 
 .live-output h3 {
@@ -568,6 +651,14 @@ h2 {
 
 .run-head strong.fail {
   color: var(--red);
+}
+
+.action-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 10px;
 }
 
 .run-card p {
@@ -919,6 +1010,7 @@ h2 {
 
   .metrics,
   .workflow-steps,
+  .walkthrough-steps,
   .evidence-points,
   .gate-grid,
   .model-grid,
@@ -926,6 +1018,8 @@ h2 {
   .triage-grid,
   .sampling-plan-grid,
   .recent-runs-grid,
+  .action-grid,
+  .roadmap-grid,
   .review-queue-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -950,6 +1044,7 @@ h2 {
 
   .metrics,
   .workflow-steps,
+  .walkthrough-steps,
   .evidence-points,
   .gate-grid,
   .model-grid,
@@ -957,14 +1052,18 @@ h2 {
   .triage-grid,
   .sampling-plan-grid,
   .recent-runs-grid,
+  .action-grid,
+  .roadmap-grid,
   .live-status-grid,
   .review-queue-grid {
     grid-template-columns: 1fr;
   }
 
   .trace-head,
+  .live-banner,
     .live-result-head,
     .run-head,
+    .action-head,
     .bad-case-head,
   .triage-head,
   .plan-head,

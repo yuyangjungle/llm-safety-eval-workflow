@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>LLM Safety Eval Workflow | AI Data & Safety RC</title>
+    <title>LLM Safety Eval Workflow | AI Data & Safety Demo</title>
     <meta
       name="description"
-      content="A portfolio-ready AI data and safety workflow release candidate with risk taxonomy, sample production, live model response, rubric judge, bad case analysis, and next-round sampling."
+      content="A demo-ready AI data and safety workflow with risk taxonomy, sample production, live model response, rubric judge, bad case analysis, and next-round sampling."
     />
     <meta name="theme-color" content="#087f83" />
     <link rel="canonical" href="https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/demo/" />
     <meta property="og:site_name" content="LLM Safety Eval Workflow" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="LLM Safety Eval Workflow | AI Data & Safety RC" />
+    <meta property="og:title" content="LLM Safety Eval Workflow | AI Data & Safety Demo" />
     <meta
       property="og:description"
       content="Risk taxonomy, sample generation, live model response, rubric judge, bad case analysis, and next-round sampling for an AI data and safety workflow."
@@ -23,7 +23,7 @@
       content="https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/results/demo-chrome-screenshot.png"
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="LLM Safety Eval Workflow | AI Data & Safety RC" />
+    <meta name="twitter:title" content="LLM Safety Eval Workflow | AI Data & Safety Demo" />
     <meta
       name="twitter:description"
       content="A release-candidate LLM safety evaluation data workflow with live API eval, rubric judge, and bad case flywheel."
@@ -38,7 +38,7 @@
     <main class="app-shell">
       <section class="hero">
         <div>
-          <p class="eyebrow">AI Data & Safety Workflow v0.2.0</p>
+          <p class="eyebrow">AI Data & Safety Workflow v0.3.0</p>
           <h1>LLM 安全评测数据工作流</h1>
           <p class="hero-copy">
             从样本池到实时模型响应、rubric judge、人审队列、bad case 和下一轮补样，串起一条可演示的大模型安全评测数据生产与质量验收流程。
@@ -94,7 +94,8 @@
           <a href="../docs/human_review_protocol.md" target="_blank" rel="noreferrer">Human Review</a>
           <a href="../docs/case_study.md" target="_blank" rel="noreferrer">Case Study</a>
           <a href="../docs/model_eval_report.md" target="_blank" rel="noreferrer">Model Report</a>
-          <a href="../docs/release_notes_v0.2.0.md" target="_blank" rel="noreferrer">Release Notes</a>
+          <a href="../docs/interview_walkthrough.md" target="_blank" rel="noreferrer">Demo Walkthrough</a>
+          <a href="../docs/release_notes_v0.3.0.md" target="_blank" rel="noreferrer">Release Notes</a>
         </div>
         <div class="evidence-points">
           <article>
@@ -112,6 +113,35 @@
           <article>
             <strong>迭代飞轮</strong>
             <span>bad case 归因、补样策略、人审抽检接口</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="report-band walkthrough-band">
+        <div>
+          <p class="eyebrow">Demo Walkthrough</p>
+          <h2>3 分钟演示路径</h2>
+        </div>
+        <div class="walkthrough-steps">
+          <article>
+            <strong>1. Risk taxonomy & schema</strong>
+            <span>先说明 8 类风险、样本字段和 expected behavior，把抽象安全问题拆成可生产数据。</span>
+          </article>
+          <article>
+            <strong>2. Sample pool & gates</strong>
+            <span>展示 32 条样本、质量门禁和 sample explorer，证明样本不是散点 prompt。</span>
+          </article>
+          <article>
+            <strong>3. Live model eval</strong>
+            <span>运行单样本实时评测；若接口不可用，页面会切换 cached demo result，保证演示不中断。</span>
+          </article>
+          <article>
+            <strong>4. Judge & bad case</strong>
+            <span>解释 rubric judge 如何输出 score、pass/review、失败原因和人审队列。</span>
+          </article>
+          <article>
+            <strong>5. Data action & sampling</strong>
+            <span>最后讲 recommended action 如何进入下一轮补样，形成数据飞轮。</span>
           </article>
         </div>
       </section>
@@ -164,6 +194,14 @@
 
       <section class="report-band">
         <div>
+          <p class="eyebrow">Recommended Data Actions</p>
+          <h2>推荐数据动作</h2>
+        </div>
+        <div id="recommended-actions" class="action-grid"></div>
+      </section>
+
+      <section class="report-band">
+        <div>
           <p class="eyebrow">Bad Case Flywheel</p>
           <h2>失败样本、人审队列与数据动作</h2>
         </div>
@@ -171,6 +209,14 @@
         <div id="sampling-plan" class="sampling-plan-grid"></div>
         <div id="human-review-queue" class="review-queue-grid"></div>
         <div id="bad-cases" class="bad-case-list"></div>
+      </section>
+
+      <section class="report-band">
+        <div>
+          <p class="eyebrow">Production Roadmap</p>
+          <h2>生产化路线</h2>
+        </div>
+        <div id="production-roadmap" class="roadmap-grid"></div>
       </section>
 
       <section class="layout">
