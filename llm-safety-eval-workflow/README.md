@@ -4,71 +4,63 @@
 [![Vercel Demo](https://img.shields.io/badge/Vercel-live-000?logo=vercel)](https://llm-safety-eval-workflow.vercel.app)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-2ea44f?logo=github)](https://yuyangjungle.github.io/llm-safety-eval-workflow/)
 
-面向 AI 数据与安全方向的安全评测数据 workflow：从风险分类、样本生产、schema 校验、模型输出评测到 bad case 迭代，模拟一条小型的大模型安全评测数据基建流程，并补充 Vercel Serverless 实时单样本模型评测。
+An AI Data & Safety workflow release candidate for LLM safety evaluation data production and quality acceptance. It connects risk taxonomy, sample schema, sample generation, model response, rubric judge, bad case analysis, data action, and next-round sampling in one explainable dashboard.
 
-[Vercel Demo](https://llm-safety-eval-workflow.vercel.app) · [GitHub Pages](https://yuyangjungle.github.io/llm-safety-eval-workflow/) · [HR Snapshot](docs/hr_snapshot.md) · [Interview Brief](docs/interview_brief.md) · [Live API Eval](docs/live_api_eval.md) · [Sampling Plan](docs/next_sampling_plan.md) · [Human Review](docs/human_review_protocol.md) · [Case Study](docs/case_study.md) · [Verification Guide](docs/verification.md) · [Model Eval Report](docs/model_eval_report.md)
+[Vercel Demo](https://llm-safety-eval-workflow.vercel.app) · [GitHub Pages](https://yuyangjungle.github.io/llm-safety-eval-workflow/) · [Project Snapshot](docs/hr_snapshot.md) · [Product Brief](docs/interview_brief.md) · [Live API Eval](docs/live_api_eval.md) · [Sampling Plan](docs/next_sampling_plan.md) · [Human Review](docs/human_review_protocol.md) · [Case Study](docs/case_study.md) · [Release Notes v0.2.0](docs/release_notes_v0.2.0.md) · [Verification Guide](docs/verification.md) · [Model Eval Report](docs/model_eval_report.md)
 
 ![Demo screenshot](results/demo-chrome-screenshot.png)
 
-## 项目定位
+## What This Project Demonstrates
 
-这个项目不是训练模型，也不声称已经接入线上业务。它重点展示 AI 数据产品实习生岗位需要的能力：
+- A safety risk taxonomy that turns broad LLM safety concerns into sampleable categories.
+- A schema-first sample pool with expected behavior, severity, difficulty, and rubric fields.
+- A reproducible workflow from seed samples to synthetic expansion, quality gates, candidate outputs, judge results, bad cases, and next sampling.
+- A live Vercel Serverless evaluation path that calls a model API for one selected sample and returns model output, score, status, latency, and data action.
+- A dashboard that makes data quality, model behavior, review queue pressure, and iteration actions understandable at a glance.
 
-- 把抽象的大模型安全风险拆成可生产、可验收的数据分类体系。
-- 设计结构化样本 schema、expected behavior 和 rubric judge。
-- 搭建 seed sample -> synthetic expansion -> quality gates -> model eval -> bad case flywheel 的可复现流程。
-- 通过 Vercel Serverless Function 安全读取模型 API key，实现单条样本的线上实时模型调用与即时 judge。
-- 用可解释的指标和 dashboard，把数据质量、模型输出差异和迭代动作讲清楚。
+## Current MVP Scope
 
-## 当前结果
-
-| 模块 | 结果 |
+| Module | Current scope |
 | --- | --- |
-| 风险分类 | 8 类安全风险，覆盖隐私、注入、违法伤害、自伤、偏见等场景 |
-| 样本规模 | 32 条评测样本，包含 8 条 seed sample 和 24 条 synthetic sample |
-| 质量门禁 | schema 完整率、风险覆盖率、prompt 去重率、rubric 完整率均为 100% |
-| 候选输出 | `baseline_naive_v0` 与 `safety_workflow_v1` 两组输出，共 64 条 |
-| 模型评测 | rubric judge 输出 pass rate、bad case、失败原因和补样建议 |
-| 实时调用 | Vercel `/api/run-eval` 按 sampleId 调用模型 API，返回输出、judge 分数和数据动作 |
-| 展示产物 | Vercel demo、GitHub Pages demo、case study、model report、bad case triage、live API eval、next sampling plan、human review queue、简历项目描述 |
-
-## HR 快速判断
-
-如果只看 30 秒，建议先看 [HR Snapshot](docs/hr_snapshot.md)：里面把项目一句话、JD 匹配点、简历写法和项目边界放在一起，避免把这个项目误读成普通前端 demo。
+| Risk taxonomy | 8 safety categories covering privacy, prompt injection, illegal harm, self-harm, bias, and factuality risks |
+| Sample pool | 32 evaluation samples: 8 seed samples and 24 synthetic samples |
+| Candidate outputs | 64 outputs across `baseline_naive_v0` and `safety_workflow_v1` |
+| Quality gates | Schema completeness, taxonomy coverage, prompt uniqueness, and rubric completeness checks |
+| Rubric judge | Rule-based, reproducible judge results with pass rate, score, bad case, failure reason, and recommended data action |
+| Live eval | Vercel `/api/run-eval` calls the configured model API by `sampleId` and returns judge output without exposing the key |
+| Dashboard | Product metrics, workflow path, live eval, recent runs, bad case flywheel, sampling plan, human review queue, and sample explorer |
 
 ## Workflow
 
 ```mermaid
 flowchart LR
-  A["Risk taxonomy"] --> B["Seed samples"]
-  B --> C["Synthetic expansion"]
-  C --> D["Schema and quality gates"]
-  D --> E["Candidate model outputs"]
-  E --> F["Rubric judge"]
-  F --> G["Bad case analysis"]
-  G --> H["Data action and next sampling plan"]
+  A["Sample Pool"] --> B["Live Model Response"]
+  B --> C["Rubric Judge"]
+  C --> D["Human Review / Bad Case"]
+  D --> E["Data Action"]
+  E --> F["Next Sampling"]
 ```
 
-## JD 对齐
+## Not Production-Grade Yet
 
-| JD 关键词 | 项目证据 |
-| --- | --- |
-| 数据策略制定 | [data_taxonomy.md](docs/data_taxonomy.md) 定义风险类型、样本策略和难度分层 |
-| 数据生产流程 | [generate_samples.py](scripts/generate_samples.py) 生成 synthetic samples 并输出统一数据集 |
-| 质量评估体系 | [evaluate_quality.py](scripts/evaluate_quality.py) 和 [eval_report.md](docs/eval_report.md) 输出质量门禁 |
-| 模型效果评测 | [judge_outputs.py](scripts/judge_outputs.py) 和 [model_eval_report.md](docs/model_eval_report.md) 输出模型对比 |
-| Bad case 迭代 | [data_flywheel.md](docs/data_flywheel.md) 和 demo 中的 judge trace 展示补样动作 |
-| 产品化表达 | [demo/](demo/) 将 workflow、指标、样本和报告变成可展示 dashboard |
+This project is a portfolio MVP and release candidate. It is intentionally lightweight and does not claim to be a production labeling or evaluation platform.
 
-## 面试讲法
+- Samples are manually seeded plus template-generated data, not real business traffic.
+- The current judge is a reproducible rubric implementation, not a full LLM-as-judge service with calibration and adjudication.
+- Recent Runs and Human Review Queue are dashboard-level views derived from local artifacts and live session state, not persisted product records.
+- The live API supports single-sample evaluation, not batch jobs or queue-backed evaluation pipelines.
 
-最短版本：
+## Next Steps Toward Production
 
-> 我做了一个面向大模型安全评测的数据 workflow MVP。它不是单纯做前端 demo，而是从风险分类、样本 schema、合成扩展、质量门禁、候选模型输出、rubric judge 到 bad case 补样建议形成闭环。项目里有 32 条样本、8 类风险、两组候选输出和可复现的评测报告，可以用来说明我对 AI 数据基建、质量验收和模型安全评测的理解。
+- Batch evaluation.
+- Persistent history.
+- Human review console.
+- Model and version comparison.
+- Cost and latency monitoring.
+- Access control.
+- Audit log and data versioning.
 
-更完整的讲法见 [docs/interview_brief.md](docs/interview_brief.md)。
-
-## 项目结构
+## Project Structure
 
 ```text
 llm-safety-eval-workflow/
@@ -80,6 +72,8 @@ llm-safety-eval-workflow/
     model_outputs.json
     judge_results.json
     bad_cases.json
+    human_review_protocol.json
+    next_sampling_plan.json
   demo/
     index.html
     styles.css
@@ -89,11 +83,12 @@ llm-safety-eval-workflow/
     case_study.md
     data_flywheel.md
     data_taxonomy.md
+    hr_snapshot.md
     interview_brief.md
-    jd_alignment.md
-    llm_as_judge.md
+    live_api_eval.md
     model_eval_report.md
-    schema.md
+    release_notes_v0.2.0.md
+    verification.md
   scripts/
     generate_samples.py
     evaluate_quality.py
@@ -103,9 +98,9 @@ llm-safety-eval-workflow/
     verify_mvp.py
 ```
 
-## 本地运行
+## Local Run
 
-从仓库根目录运行：
+From the repository root:
 
 ```powershell
 npm run generate
@@ -114,26 +109,17 @@ npm run verify:public
 npm run serve
 ```
 
-访问：
+Visit:
 
 ```text
 http://localhost:8000/llm-safety-eval-workflow/demo/
 ```
 
-可选 DeepSeek API 输出：
+Optional model-output generation:
 
 ```powershell
 $env:DEEPSEEK_API_KEY="your_key_here"
 npm run deepseek:sample
 ```
 
-脚本只从环境变量读取 key，不会把 key 写入仓库。详细说明见 [deepseek_integration.md](docs/deepseek_integration.md)。
-
-线上实时评测说明见 [live_api_eval.md](docs/live_api_eval.md)。生产环境需要在 Vercel 配置 `DEEPSEEK_API_KEY`，前端不会接触密钥。
-
-## 项目边界
-
-- 样本是人工 seed + 模板化合成数据，用于展示数据生产流程，不代表真实业务数据。
-- 当前 judge 是可复现的规则化 rubric judge，不等同于真实线上 LLM-as-judge 或人工审核系统。
-- 当前 Vercel demo 已支持单条样本实时模型 API 调用，但不等同于生产级评测平台。
-- 后续可以继续补数据库、任务队列、登录权限、人审操作、成本监控、错误聚类和数据版本管理。
+Scripts read the key only from environment variables. The browser never receives the key. See [deepseek_integration.md](docs/deepseek_integration.md) and [live_api_eval.md](docs/live_api_eval.md) for details.

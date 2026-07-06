@@ -102,13 +102,23 @@ function groupBadCases(cases) {
   });
 }
 
+function dataActionText(judge) {
+  return judge.pass
+    ? "Accept: 当前样本通过 rubric judge，可进入通过样本池。"
+    : `Action: ${judge.recommended_data_action || "转入 bad case 归因与下一轮补样。"}`;
+}
+
 function renderMetrics() {
-  const metrics = data.report.metrics;
+  const riskCount = new Set(data.samples.map((item) => item.risk_type)).size;
+  const outputCount = data.modelOutputs?.length || 0;
+  const badCaseCount = data.badCases?.length || 0;
   const items = [
-    ["样本总数", data.report.sample_count, "seed + synthetic"],
-    ["风险覆盖", pct(metrics.taxonomy_coverage_rate), "8 类安全风险"],
-    ["Schema 完整", pct(metrics.schema_pass_rate), "字段与 rubric 校验"],
-    ["Prompt 去重", pct(metrics.unique_prompt_ratio), "避免重复样本"],
+    ["Risk categories", riskCount, "安全风险分类"],
+    ["Evaluation samples", data.report.sample_count, "seed + synthetic"],
+    ["Candidate outputs", outputCount, "双模型候选输出"],
+    ["Live API", "ON", "实时单样本评测"],
+    ["Rubric judge", "ON", "质量验收规则"],
+    ["Bad case flywheel", badCaseCount, "失败归因与补样"],
   ];
   document.getElementById("metrics").innerHTML = items
     .map(
@@ -256,6 +266,8 @@ function renderLiveEvalResult() {
   const sample = result.sample;
   const statusClass = judge.pass ? "pass" : "fail";
   const statusText = judge.pass ? "PASS" : "REVIEW";
+  const promptTokens = result.usage?.prompt_tokens ?? "-";
+  const completionTokens = result.usage?.completion_tokens ?? "-";
   el.innerHTML = `
     <article class="live-result-card">
       <div class="live-result-head">
@@ -265,6 +277,24 @@ function renderLiveEvalResult() {
           <span class="tag">${escapeHtml(result.model)}</span>
         </div>
         <strong class="${statusClass}">${statusText} · ${pct(judge.final_score)}</strong>
+      </div>
+      <div class="live-status-grid">
+        <div>
+          <span>Status</span>
+          <strong class="${statusClass}">${statusText}</strong>
+        </div>
+        <div>
+          <span>Model</span>
+          <strong>${escapeHtml(result.model)}</strong>
+        </div>
+        <div>
+          <span>Latency</span>
+          <strong>${result.latency_ms} ms</strong>
+        </div>
+        <div>
+          <span>Usage</span>
+          <strong>${promptTokens}/${completionTokens}</strong>
+        </div>
       </div>
       <p class="prompt">${escapeHtml(sample.user_prompt)}</p>
       <div class="live-output">
@@ -284,7 +314,7 @@ function renderLiveEvalResult() {
           .join("")}
       </div>
       <p class="data-action">
-        ${judge.pass ? "数据动作：当前样本通过实时 judge。" : `数据动作：${escapeHtml(judge.recommended_data_action)}`}
+        ${escapeHtml(dataActionText(judge))}
       </p>
       <div class="live-meta">
         <span>${escapeHtml(result.generated_at)}</span>
@@ -325,7 +355,69 @@ async function runLiveEval() {
   } finally {
     state.liveEvalLoading = false;
     renderLiveEvalResult();
+    renderRecentRuns();
   }
+}
+
+function renderRecentRuns() {
+  const el = document.getElementById("recent-runs");
+  if (!el) return;
+
+  const liveRun = state.liveEvalResult
+    ? [
+        {
+          source: "Live API",
+          sampleId: state.liveEvalResult.sample.id,
+          modelId: state.liveEvalResult.model,
+          riskName: taxonomyById[state.liveEvalResult.sample.risk_type]?.name || state.liveEvalResult.sample.risk_type,
+          score: state.liveEvalResult.judge.final_score,
+          pass: state.liveEvalResult.judge.pass,
+          latency: `${state.liveEvalResult.latency_ms} ms`,
+          action: dataActionText(state.liveEvalResult.judge),
+        },
+      ]
+    : [];
+
+  const offlineRuns = [...(data.judgeResults || [])]
+    .sort((a, b) => Number(a.pass) - Number(b.pass) || a.sample_id.localeCompare(b.sample_id))
+    .slice(0, 6 - liveRun.length)
+    .map((judge) => {
+      const sample = sampleById[judge.sample_id];
+      return {
+        source: "Offline batch",
+        sampleId: judge.sample_id,
+        modelId: judge.model_id,
+        riskName: taxonomyById[judge.risk_type]?.name || judge.risk_type,
+        score: judge.final_score,
+        pass: judge.pass,
+        latency: "demo dataset",
+        action: dataActionText(judge),
+        severity: sample?.label?.severity || "medium",
+      };
+    });
+
+  const rows = [...liveRun, ...offlineRuns];
+  el.innerHTML = rows
+    .map(
+      (run) => `
+        <article class="run-card">
+          <div class="run-head">
+            <div>
+              <span class="tag">${escapeHtml(run.source)}</span>
+              <span class="tag">${escapeHtml(run.sampleId)}</span>
+            </div>
+            <strong class="${run.pass ? "pass" : "fail"}">${run.pass ? "PASS" : "REVIEW"} · ${pct(run.score)}</strong>
+          </div>
+          <p>${escapeHtml(run.riskName)} · ${escapeHtml(run.modelId)}</p>
+          <div class="run-meta">
+            <span>${escapeHtml(run.latency)}</span>
+            ${run.severity ? `<span>${escapeHtml(run.severity)}</span>` : ""}
+          </div>
+          <p class="data-action">${escapeHtml(run.action)}</p>
+        </article>
+      `,
+    )
+    .join("");
 }
 
 function renderModelEval() {
@@ -527,7 +619,7 @@ function renderHumanReviewQueue() {
           <article class="review-card">
             <div class="review-head">
               <div>
-                <span class="tag">${item.review_id}</span>
+                <span class="tag">${item.review_id.replace(/^HRQ/, "RQ")}</span>
                 <span class="tag">${item.assignment}</span>
               </div>
               <span class="priority-tag ${item.priority.toLowerCase()}">${item.priority}</span>
@@ -575,6 +667,7 @@ renderFilters();
 renderSamples();
 renderGates();
 renderLiveEvalPanel();
+renderRecentRuns();
 renderModelEval();
 renderJudgeTrace();
 renderBadCaseTriage();

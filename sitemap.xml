@@ -50,4 +50,9 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/docs/release_notes_v0.2.0.md</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
 </urlset>

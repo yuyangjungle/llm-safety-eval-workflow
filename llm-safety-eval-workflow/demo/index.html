@@ -3,19 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>LLM Safety Eval Workflow | AI Data & Safety MVP</title>
+    <title>LLM Safety Eval Workflow | AI Data & Safety RC</title>
     <meta
       name="description"
-      content="A portfolio-ready LLM safety evaluation data workflow with risk taxonomy, synthetic samples, quality gates, rubric judge, bad case analysis, and a Vercel demo."
+      content="A portfolio-ready AI data and safety workflow release candidate with risk taxonomy, sample production, live model response, rubric judge, bad case analysis, and next-round sampling."
     />
     <meta name="theme-color" content="#087f83" />
     <link rel="canonical" href="https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/demo/" />
     <meta property="og:site_name" content="LLM Safety Eval Workflow" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="LLM Safety Eval Workflow | AI Data & Safety MVP" />
+    <meta property="og:title" content="LLM Safety Eval Workflow | AI Data & Safety RC" />
     <meta
       property="og:description"
-      content="Risk taxonomy, sample generation, quality gates, rubric judge, bad case analysis, and interview-ready evidence for an AI data and safety workflow."
+      content="Risk taxonomy, sample generation, live model response, rubric judge, bad case analysis, and next-round sampling for an AI data and safety workflow."
     />
     <meta property="og:url" content="https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/demo/" />
     <meta
@@ -23,10 +23,10 @@
       content="https://llm-safety-eval-workflow.vercel.app/llm-safety-eval-workflow/results/demo-chrome-screenshot.png"
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="LLM Safety Eval Workflow | AI Data & Safety MVP" />
+    <meta name="twitter:title" content="LLM Safety Eval Workflow | AI Data & Safety RC" />
     <meta
       name="twitter:description"
-      content="An interview-ready LLM safety evaluation data workflow with quality gates, rubric judge, and bad case flywheel."
+      content="A release-candidate LLM safety evaluation data workflow with live API eval, rubric judge, and bad case flywheel."
     />
     <meta
       name="twitter:image"
@@ -38,47 +38,48 @@
     <main class="app-shell">
       <section class="hero">
         <div>
-          <p class="eyebrow">AI Data & Safety Workflow MVP</p>
-          <h1>LLM 安全评测数据生产与质量验收</h1>
+          <p class="eyebrow">AI Data & Safety Workflow v0.2.0</p>
+          <h1>LLM 安全评测数据工作流</h1>
           <p class="hero-copy">
-            从风险分类、合成样本、Schema 校验到质量报告的小型数据飞轮，用于验证大模型安全评测数据基建的产品方案。
+            从样本池到实时模型响应、rubric judge、人审队列、bad case 和下一轮补样，串起一条可演示的大模型安全评测数据生产与质量验收流程。
           </p>
         </div>
         <div class="hero-meta">
-          <span>Offline MVP</span>
-          <span>Schema-first</span>
-          <span>Quality Gates</span>
+          <span>Live API enabled</span>
+          <span>Rubric judge</span>
+          <span>Bad case flywheel</span>
         </div>
       </section>
 
-      <section class="role-fit-strip" aria-label="JD 对齐">
-        <strong>JD 对齐</strong>
-        <span>数据策略</span>
-        <span>样本生产</span>
-        <span>质量验收</span>
-        <span>模型评测</span>
-        <span>bad case 迭代</span>
-        <a href="../docs/hr_snapshot.md" target="_blank" rel="noreferrer">HR Snapshot</a>
+      <section class="role-fit-strip" aria-label="Workflow Overview">
+        <strong>Workflow Overview</strong>
+        <span>Sample Pool</span>
+        <span>Live Response</span>
+        <span>Rubric Judge</span>
+        <span>Review Queue</span>
+        <span>Next Sampling</span>
+        <a href="../docs/hr_snapshot.md" target="_blank" rel="noreferrer">Project Snapshot</a>
       </section>
 
       <section class="metrics" id="metrics"></section>
 
       <section class="workflow-band">
-        <h2>Workflow</h2>
+        <h2>Workflow Overview</h2>
+        <p class="section-copy">这不是单点模型 demo，而是面向安全评测数据生产、质量验收和持续补样的轻量闭环。</p>
         <div class="workflow-steps">
-          <div>风险分类</div>
-          <div>种子样本</div>
-          <div>合成扩展</div>
-          <div>规则校验</div>
-          <div>质量报告</div>
-          <div>数据迭代</div>
+          <div><strong>Sample Pool</strong><span>风险分类与结构化样本</span></div>
+          <div><strong>Live Model Response</strong><span>单样本实时模型调用</span></div>
+          <div><strong>Rubric Judge</strong><span>可解释质量验收</span></div>
+          <div><strong>Human Review / Bad Case</strong><span>抽检队列与失败归因</span></div>
+          <div><strong>Data Action</strong><span>拒答、补证据、权限确认</span></div>
+          <div><strong>Next Sampling</strong><span>下一轮补样计划</span></div>
         </div>
       </section>
 
       <section class="evidence-band">
         <div>
-          <p class="eyebrow">Interview Evidence</p>
-          <h2>面试证据链</h2>
+          <p class="eyebrow">Project Evidence</p>
+          <h2>产品证据链</h2>
         </div>
         <div class="evidence-grid">
           <a href="https://github.com/yuyangjungle/llm-safety-eval-workflow" target="_blank" rel="noreferrer">
@@ -87,12 +88,13 @@
           <a href="https://llm-safety-eval-workflow.vercel.app" target="_blank" rel="noreferrer">
             Vercel Demo
           </a>
-          <a href="../docs/hr_snapshot.md" target="_blank" rel="noreferrer">HR Snapshot</a>
-          <a href="../docs/interview_brief.md" target="_blank" rel="noreferrer">Interview Brief</a>
+          <a href="../docs/hr_snapshot.md" target="_blank" rel="noreferrer">Project Snapshot</a>
+          <a href="../docs/interview_brief.md" target="_blank" rel="noreferrer">Product Brief</a>
           <a href="../docs/next_sampling_plan.md" target="_blank" rel="noreferrer">Sampling Plan</a>
           <a href="../docs/human_review_protocol.md" target="_blank" rel="noreferrer">Human Review</a>
           <a href="../docs/case_study.md" target="_blank" rel="noreferrer">Case Study</a>
           <a href="../docs/model_eval_report.md" target="_blank" rel="noreferrer">Model Report</a>
+          <a href="../docs/release_notes_v0.2.0.md" target="_blank" rel="noreferrer">Release Notes</a>
         </div>
         <div class="evidence-points">
           <article>
@@ -154,8 +156,16 @@
 
       <section class="report-band">
         <div>
+          <p class="eyebrow">Evaluation History</p>
+          <h2>近期运行与验收状态</h2>
+        </div>
+        <div id="recent-runs" class="recent-runs-grid"></div>
+      </section>
+
+      <section class="report-band">
+        <div>
           <p class="eyebrow">Bad Case Flywheel</p>
-          <h2>失败样本与数据动作</h2>
+          <h2>失败样本、人审队列与数据动作</h2>
         </div>
         <div id="bad-case-triage" class="triage-grid"></div>
         <div id="sampling-plan" class="sampling-plan-grid"></div>

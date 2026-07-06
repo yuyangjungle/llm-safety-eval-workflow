@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import struct
+import json
 from pathlib import Path
 
 
@@ -15,6 +16,7 @@ MARKDOWN_FILES = [
     "llm-safety-eval-workflow/docs/interview_brief.md",
     "llm-safety-eval-workflow/docs/live_api_eval.md",
     "llm-safety-eval-workflow/docs/next_sampling_plan.md",
+    "llm-safety-eval-workflow/docs/release_notes_v0.2.0.md",
     "llm-safety-eval-workflow/docs/case_study.md",
     "llm-safety-eval-workflow/docs/publishing.md",
     "llm-safety-eval-workflow/docs/verification.md",
@@ -100,8 +102,10 @@ def main() -> None:
 
     root_readme = read_text("README.md")
     project_readme = read_text("llm-safety-eval-workflow/README.md")
+    package_json = json.loads(read_text("package.json"))
     checks.extend(
         [
+            require(package_json.get("version") == "0.2.0", "package_version_0_2_0"),
             require("actions/workflows/verify.yml/badge.svg" in root_readme, "root_readme_verify_badge"),
             require("llm-safety-eval-workflow.vercel.app" in root_readme, "root_readme_vercel_link"),
             require("yuyangjungle.github.io/llm-safety-eval-workflow" in root_readme, "root_readme_pages_link"),
@@ -109,7 +113,11 @@ def main() -> None:
             require("llm-safety-eval-workflow/docs/hr_snapshot.md" in root_readme, "root_readme_hr_snapshot_link"),
             require("llm-safety-eval-workflow/docs/human_review_protocol.md" in root_readme, "root_readme_human_review_link"),
             require("llm-safety-eval-workflow/docs/live_api_eval.md" in root_readme, "root_readme_live_api_link"),
-            require("llm-safety-eval-workflow/docs/next_sampling_plan.md" in root_readme, "root_readme_sampling_plan_link"),
+            require("llm-safety-eval-workflow/docs/release_notes_v0.2.0.md" in root_readme, "root_readme_release_notes_link"),
+            require("What This Project Demonstrates" in root_readme, "root_readme_demonstrates_section"),
+            require("Current MVP Scope" in root_readme, "root_readme_current_scope_section"),
+            require("Not Production-Grade Yet" in root_readme, "root_readme_boundary_section"),
+            require("Next Steps Toward Production" in root_readme, "root_readme_production_roadmap_section"),
             require("actions/workflows/verify.yml/badge.svg" in project_readme, "project_readme_verify_badge"),
             require("docs/hr_snapshot.md" in project_readme, "project_readme_hr_snapshot_link"),
             require("docs/human_review_protocol.md" in project_readme, "project_readme_human_review_link"),
@@ -118,6 +126,11 @@ def main() -> None:
             require("docs/next_sampling_plan.md" in project_readme, "project_readme_sampling_plan_link"),
             require("docs/verification.md" in project_readme, "project_readme_verification_guide_link"),
             require("docs/model_eval_report.md" in project_readme, "project_readme_model_report_link"),
+            require("docs/release_notes_v0.2.0.md" in project_readme, "project_readme_release_notes_link"),
+            require("What This Project Demonstrates" in project_readme, "project_readme_demonstrates_section"),
+            require("Current MVP Scope" in project_readme, "project_readme_current_scope_section"),
+            require("Not Production-Grade Yet" in project_readme, "project_readme_boundary_section"),
+            require("Next Steps Toward Production" in project_readme, "project_readme_production_roadmap_section"),
         ]
     )
 
@@ -125,8 +138,8 @@ def main() -> None:
         html = read_text(file)
         checks.extend(
             [
-                require("LLM Safety Eval Workflow | AI Data & Safety MVP" in html, f"html_title:{file}"),
-                require("portfolio-ready LLM safety evaluation data workflow" in html, f"html_description:{file}"),
+                require("LLM Safety Eval Workflow | AI Data & Safety RC" in html, f"html_title:{file}"),
+                require("portfolio-ready AI data and safety workflow release candidate" in html, f"html_description:{file}"),
                 require('rel="canonical"' in html, f"html_canonical:{file}"),
                 require(meta_content(html, "property=og:image").endswith("results/demo-chrome-screenshot.png"), f"html_og_image:{file}"),
                 require(meta_content(html, "name=twitter:card") == "summary_large_image", f"html_twitter_card:{file}"),
@@ -160,6 +173,7 @@ def main() -> None:
             require("docs/live_api_eval.md" in sitemap, "sitemap_live_api_url"),
             require("docs/next_sampling_plan.md" in sitemap, "sitemap_sampling_plan_url"),
             require("docs/verification.md" in sitemap, "sitemap_verification_url"),
+            require("docs/release_notes_v0.2.0.md" in sitemap, "sitemap_release_notes_url"),
         ]
     )
 
@@ -174,12 +188,22 @@ def main() -> None:
             require("../docs/next_sampling_plan.md" in demo_html, "demo_sampling_plan_link"),
             require("../docs/case_study.md" in demo_html, "demo_case_study_link"),
             require("../docs/model_eval_report.md" in demo_html, "demo_model_report_link"),
+            require("../docs/release_notes_v0.2.0.md" in demo_html, "demo_release_notes_link"),
+            require("Workflow Overview" in demo_html, "demo_workflow_overview_copy"),
+            require("Project Snapshot" in demo_html, "demo_project_snapshot_label"),
+            require("Product Brief" in demo_html, "demo_product_brief_label"),
+            require('id="recent-runs"' in demo_html, "demo_recent_runs_mount"),
             require('id="bad-case-triage"' in demo_html, "demo_bad_case_triage_mount"),
             require('id="human-review-queue"' in demo_html, "demo_human_review_mount"),
             require('id="sampling-plan"' in demo_html, "demo_sampling_plan_mount"),
             require('id="live-sample"' in demo_html, "demo_live_sample_mount"),
             require('id="run-live-eval"' in demo_html, "demo_live_eval_button"),
             require('id="live-eval-result"' in demo_html, "demo_live_eval_result_mount"),
+            require("JD 对齐" not in demo_html, "demo_no_jd_alignment_label"),
+            require("HR Snapshot" not in demo_html, "demo_no_hr_snapshot_label"),
+            require("Interview Evidence" not in demo_html, "demo_no_interview_evidence_label"),
+            require("Interview Brief" not in demo_html, "demo_no_interview_brief_label"),
+            require("面试证据链" not in demo_html, "demo_no_interview_chain_label"),
         ]
     )
 
@@ -189,11 +213,14 @@ def main() -> None:
             require("function renderBadCaseTriage()" in demo_app, "demo_app_renders_bad_case_triage"),
             require("function renderHumanReviewQueue()" in demo_app, "demo_app_renders_human_review_queue"),
             require("function renderSamplingPlan()" in demo_app, "demo_app_renders_sampling_plan"),
+            require("function renderRecentRuns()" in demo_app, "demo_app_renders_recent_runs"),
             require("function badCasePriority(item)" in demo_app, "demo_app_derives_bad_case_priority"),
             require("function groupBadCases(cases)" in demo_app, "demo_app_groups_bad_cases"),
             require("async function runLiveEval()" in demo_app, "demo_app_runs_live_eval"),
             require('fetch("/api/run-eval"' in demo_app, "demo_app_calls_live_api"),
             require("function escapeHtml(value)" in demo_app, "demo_app_escapes_live_output"),
+            require("latency_ms" in demo_app, "demo_app_displays_live_latency"),
+            require("dataActionText" in demo_app, "demo_app_displays_data_action"),
         ]
     )
 

@@ -1,6 +1,6 @@
 {
   "name": "llm-safety-eval-workflow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "generate": "python llm-safety-eval-workflow/scripts/generate_samples.py && python llm-safety-eval-workflow/scripts/evaluate_quality.py && python llm-safety-eval-workflow/scripts/generate_model_outputs.py && python llm-safety-eval-workflow/scripts/judge_outputs.py",
